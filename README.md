@@ -28,9 +28,3 @@
 ### C) SERIAL BREAKOUT
 Once you open up the enclosure, you will find the usual breakout pins for ESP8266: VCC, GND, RX, TX, GPIO0. You can solder a header to them but it won't fit in the enclosure anymore so I advise to solder the wires directly if you decide to go with this option.
 Do NOT connect VCC to external power source!
-
-## Hardware history
-2.0 First version of the remote with larger battery and usb to serial converter  
-2.1 Added optional pads for MCP1700 regulator, added voltage divider  
-2.2 Added mosfet to use USB power instead of battery when USB is connected  
-2.3 Auto reset circuitry added for easy sketch upload via USB  

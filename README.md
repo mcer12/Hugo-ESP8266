@@ -12,6 +12,7 @@
 2) To exit configuration portal, either save changes or press any of the buttons.
 
 ## Flashing custom FW
+You can flash your own Arduino sketch. 
 
 ### A) USB
 1) Connect the device to your PC via microUSB connector
@@ -28,3 +29,8 @@
 ### C) SERIAL BREAKOUT
 Once you open up the enclosure, you will find the usual breakout pins for ESP8266: VCC, GND, RX, TX, GPIO0. You can solder a header to them but it won't fit in the enclosure anymore so I advise to solder the wires directly if you decide to go with this option.
 Do NOT connect VCC to external power source!
+
+## Useful information for making custom sketch
+1) you need to set GPIO16 low at the beginning of setup() if you want to use buttons in your sketch. Otherwise anytime you push any button, Hugh will restart.
+pinMode(16, OUTPUT);
+digitalWrite(16, LOW);

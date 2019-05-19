@@ -5,6 +5,8 @@
 3) There you will set your wifi credentials and url address for each button.
 4) (Optional) To further improve performance and battery life, you can add your router's gateway IP address and also pick a static IP for your remote. You will also have to set the static IP on your router.
 
+![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/ap_screen.png)
+
 ## Changing settings
 1) Push and hold button 1 and 4 until the led starts blinking and release. Configuration access point will show up for 5 minutes
 2) To exit configuration portal, either save changes or press any of the buttons.

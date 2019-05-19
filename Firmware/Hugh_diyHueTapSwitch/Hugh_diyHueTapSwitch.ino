@@ -50,7 +50,7 @@ ESP8266WebServer server(80);
 DynamicJsonDocument json(1024); // config buffer
 
 void setup() {
-  Serial.begin(74880);
+  Serial.begin(115200);
 
   pinMode(16, OUTPUT);
   pinMode(button1_pin, INPUT);
@@ -102,6 +102,7 @@ void setup() {
       }
       delay(5);
     }
+/*
     Serial.println("Wifi connected...");
     Serial.print("SSID: ");
     Serial.println(WiFi.SSID());
@@ -110,6 +111,7 @@ void setup() {
     WiFi.macAddress(mac);
     Serial.print("IP: ");
     Serial.println(WiFi.localIP());
+*/
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("No credentials set, go to config mode");

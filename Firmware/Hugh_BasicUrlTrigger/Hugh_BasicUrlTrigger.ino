@@ -49,7 +49,7 @@ ESP8266WebServer server(80);
 DynamicJsonDocument json(1024); // config buffer
 
 void setup() {
-  Serial.begin(74880);
+  Serial.begin(115200);
 
   pinMode(16, OUTPUT);
   pinMode(button1_pin, INPUT);
@@ -87,7 +87,7 @@ void setup() {
       }
     }
 
-    serializeJson(json, Serial);
+    //serializeJson(json, Serial);
 
     WiFi.begin(ssid, pass);
 
@@ -100,13 +100,16 @@ void setup() {
       }
       delay(5);
     }
-    Serial.println(" ");
+    /*
+    Serial.println("Wifi connected...");
     Serial.print("SSID: ");
     Serial.println(WiFi.SSID());
     Serial.print("Mac address: ");
     Serial.println(WiFi.macAddress());
+    WiFi.macAddress(mac);
     Serial.print("IP: ");
     Serial.println(WiFi.localIP());
+    */
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("No credentials set, go to config mode");
@@ -152,19 +155,19 @@ void loop() {
 
   if (button == 1) {
     Serial.println("B1");
-    sendHttpRequest(json["b1"].as<const char*>());
+    sendHttpRequest(json["b1"].as<String>());
   }
   else if (button == 2) {
     Serial.println("B2");
-    sendHttpRequest(json["b2"].as<const char*>());
+    sendHttpRequest(json["b2"].as<String>());
   }
   else if (button == 3) {
     Serial.println("B3");
-    sendHttpRequest(json["b3"].as<const char*>());
+    sendHttpRequest(json["b3"].as<String>());
   }
   else if (button == 4) {
     Serial.println("B4");
-    sendHttpRequest(json["b4"].as<const char*>());
+    sendHttpRequest(json["b4"].as<String>());
   }
   digitalWrite(5, HIGH);
   delay(20);

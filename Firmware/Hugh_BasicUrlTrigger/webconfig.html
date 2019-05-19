@@ -29,7 +29,7 @@
             color: #fff;
             background: #000;
             box-shadow: 0 0 100px rgba(0,0,0,.5);
-            border-radius: 20px;
+            border-radius: 50px;
         }
         .row{
             margin-bottom: 15px;
@@ -106,6 +106,28 @@
         .github a:hover{
             color: #ffba66;
         }
+        .bat p{
+            margin: 0 0 5px 0;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: .8rem;
+        }
+        .bat > div{
+            position: relative;
+            margin: 0 auto 20px;
+            width: 300px;
+            height: 10px;
+            background: #272727;
+            border-radius: 5px;
+        }
+        .bat > div > div{
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            border-radius: 15px;
+            min-width: 30px;
+        }
     </style>
     <style media="all and (max-width: 520px)">
         .wrapper{
@@ -120,6 +142,10 @@
 <body>
 
 <div class="wrapper">
+    <div class="bat">
+        <p>Battery level: @</p>
+        <div><div style="background: @; width: @"></div></div>
+    </div>
     <div class="container">
         <form method="post" action="/">
             <h1>Hugh Configuration</h1>

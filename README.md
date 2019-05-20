@@ -1,4 +1,9 @@
 # Hugh-ESP8266
+
+## Useful links
+3D printed case:  
+https://www.thingiverse.com/thing:3641618
+
 ## First run
 1) Push any of the buttons. Led indicator will start blinking fast and new wifi access point will appear for 5 minutes. 
 2) Connect to the network with phone or PC and open URL 10.10.10.0

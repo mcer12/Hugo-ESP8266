@@ -1,7 +1,7 @@
 # Hugh-ESP8266
 
 Welcome to official git rep for Hugh, universal wifi remote.  
-![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/hugh.png)
+![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/hugh.jpg)
 
 ## Useful information
 3D printable case available here:  

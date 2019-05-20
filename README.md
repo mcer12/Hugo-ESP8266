@@ -10,7 +10,7 @@ If you use diyHue emulator, there is custom sketch in Firmwares directory just f
 diyHue github: https://github.com/diyhue/diyHue  
 
 ## First run
-1) Push any of the buttons. Led indicator will start blinking fast and new wifi access point will appear for 5 minutes. 
+1) Push any of the buttons. Led indicator will start blinking and new wifi access point will appear for 5 minutes. 
 2) Connect to the network with phone or PC and open URL 10.10.10.0
 3) There you will set your wifi credentials and url address for each button.
 4) (Optional) To further improve performance and battery life, you can add your router's gateway IP address and also pick a static IP for your remote. You will also have to set the static IP on your router.
@@ -32,7 +32,7 @@ You can flash your own Arduino sketch.
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/ide_settings.png)
 
 ### B) Arduino OTA
-1) Push the 2nd and 3rd button at the same time and hold them for about 3 seconds, then release. Led indicator should start blinking.
+1) Push the 2nd and 3rd button at the same time and hold them until the led starts blinking fast and release. Led indicator should start blinking.
 2) Open arduino IDE adn in available ports list there should be your remote.
 3) Upload your sketch as usual
 
@@ -44,3 +44,6 @@ Do NOT connect VCC to external power source!
 1) you need to set GPIO16 low at the beginning of setup() if you want to use buttons in your sketch. Otherwise anytime you push any button, Hugh will restart.
 pinMode(16, OUTPUT);
 digitalWrite(16, LOW);
+
+## CREDITS
+Marius Motea and his diyHue project (https://github.com/diyhue/diyHue). His project was the reason to design the remote in the first place and firmware sketch was initially based on it.

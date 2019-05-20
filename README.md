@@ -1,8 +1,13 @@
 # Hugh-ESP8266
 
-## Useful links
-3D printed case:  
-https://www.thingiverse.com/thing:3641618
+Welcome to official git rep for Hugh, universal wifi remote.  
+![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/hugh.png)
+
+## Useful information
+3D printable case available here:  
+https://www.thingiverse.com/thing:3641618  
+If you use diyHue emulator, there is custom sketch in Firmwares directory just for that!  
+diyHue github: https://github.com/diyhue/diyHue  
 
 ## First run
 1) Push any of the buttons. Led indicator will start blinking fast and new wifi access point will appear for 5 minutes. 

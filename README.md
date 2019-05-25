@@ -6,7 +6,10 @@ Welcome to official git rep for Hugh, universal wifi remote.
 ## Useful information
 3D printable case available here:  
 https://www.thingiverse.com/thing:3641618  
-If you use diyHue emulator, there is custom sketch in Firmwares directory just for that!  
+UPDATE: Added two more top covers to choose from, one with shapes and one without pictograms for easy remixing  
+Need another one? Get it here:  
+https://www.tindie.com/products/mcer12/hugh-esp8266-4-button-wifi-remote/  
+If you use diyHue emulator, just head to Firmwares directory for diyHueTapSwitch sketch!  
 diyHue github: https://github.com/diyhue/diyHue  
 
 ## First run
@@ -18,32 +21,35 @@ diyHue github: https://github.com/diyhue/diyHue
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/ap_screen.png)
 
 ## Changing settings
-1) Push and hold button 1 and 4 until the led starts blinking and release. Configuration access point will show up for 5 minutes
+1) Push and hold button 1 and 4 until the led starts blinking and release. Configuration access point will show up for 5 minutes.
 2) To exit configuration portal, either save changes or press any of the buttons.
 
 ## Flashing custom FW
-You can flash your own Arduino sketch. 
+You can flash your own Arduino sketch or pick one in this project's Firmwares directory. 
 
 ### A) USB
 1) Connect the device to your PC via microUSB connector
-2) Choose appropriate COM port in arduino IDE and select correct settings as shown in image below.
+2) Choose appropriate COM port in arduino IDE and select correct settings as shown in image below (pay attention to Flash size and reset method settings).
 3) Upload the sketch. The integrated CH340 chip should handle up to 921600 baud but if you're having issues, lower the baud rate to 115200
 
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/ide_settings.png)
 
 ### B) Arduino OTA
-1) Push the 2nd and 3rd button at the same time and hold them until the led starts blinking fast and release. Led indicator should start blinking.
-2) Open arduino IDE adn in available ports list there should be your remote.
-3) Upload your sketch as usual
+NOTE: For OTA, you need to first set your wifi credentials in Hugh's config portal.  
+1) If you have Arduino IDE open, close it.  
+2) Push the 2nd and 3rd button at the same time and hold them until the led starts blinking fast and release. OTA will now be available for 5 minutes.  
+3) Open arduino IDE and in available ports list there should be your remote.  
+4) Upload your sketch as usual  
 
 ### C) SERIAL BREAKOUT
 Once you open up the enclosure, you will find the usual breakout pins for ESP8266: VCC, GND, RX, TX, GPIO0. You can solder a header to them but it won't fit in the enclosure anymore so I advise to solder the wires directly if you decide to go with this option.
-Do NOT connect VCC to external power source!
+IMPORTANT: Do NOT connect VCC to external power source!
 
 ## Useful information for making custom sketch
-1) you need to set GPIO16 low at the beginning of setup() if you want to use buttons in your sketch. Otherwise anytime you push any button, Hugh will restart.
-pinMode(16, OUTPUT);
-digitalWrite(16, LOW);
+1) You need to set GPIO16 low at the beginning of setup() if you want to use buttons in your sketch. Otherwise anytime you push any button, Hugh will restart.  
+pinMode(16, OUTPUT);  
+digitalWrite(16, LOW);  
+2) All available ESP8266 GPIOs are used here. You can theoretically use RX, TX and GPIO0 for your own purpose, keep in mind that using RX and GPIO0 will prevent the device from booting up so you need to boot first before connecting anything to these pins. TX should be safe but it's not recommended. If you really need a GPIO, you can solder GPIO5 (connected to status LED).
 
 ## CREDITS
 Marius Motea and his diyHue project (https://github.com/diyhue/diyHue). His project was the reason to design the remote in the first place and firmware sketch was initially based on it.

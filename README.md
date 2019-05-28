@@ -50,6 +50,7 @@ IMPORTANT: Do NOT connect VCC to external power source!
 pinMode(16, OUTPUT);  
 digitalWrite(16, LOW);  
 2) All available ESP8266 GPIOs are used here. You can theoretically use RX, TX and GPIO0 for your own purpose, keep in mind that using RX and GPIO0 will prevent the device from booting up so you need to boot first before connecting anything to these pins. TX should be safe but it's not recommended. If you really need a GPIO, you can solder GPIO5 (connected to status LED).
+3) This is NOT IR remote, but with skilled soldering, you can replace status LED (GPIO5) with side-positioned smd IR LED. The functional range of such IR blaster is questionable but status led is positioned rather conveniently for that.
 
 ## CREDITS
 Marius Motea and his diyHue project (https://github.com/diyhue/diyHue). His project was the reason to design the remote in the first place and firmware sketch was initially based on it.

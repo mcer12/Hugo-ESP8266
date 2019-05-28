@@ -30,7 +30,8 @@ You can flash your own Arduino sketch or pick one in this project's Firmwares di
 ### A) USB
 1) Connect the device to your PC via microUSB connector
 2) Choose appropriate COM port in arduino IDE and select correct settings as shown in image below (pay attention to Flash size and reset method settings).
-3) Upload the sketch. The integrated CH340 chip should handle up to 921600 baud but if you're having issues, lower the baud rate to 115200
+3) Upload the sketch. The integrated CH340 chip should handle up to 921600 baud but if you're having issues, lower the baud rate to 115200  
+NOTE: If the device doesnt show up in available ports, you probably don't have CH340 driver installed
 
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/ide_settings.png)
 

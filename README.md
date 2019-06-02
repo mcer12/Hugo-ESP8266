@@ -14,9 +14,10 @@ diyHue github: https://github.com/diyhue/diyHue
 
 ## First run
 1) Push any of the buttons. Led indicator will start blinking and new wifi access point will appear for 5 minutes. 
-2) Connect to the network with phone or PC and open URL 10.10.10.0
+2) Connect to the network with phone or PC and open URL 10.10.10.1 (10.10.10.0 if using firmware v1.0)
 3) There you will set your wifi credentials and url address for each button.
-4) (Optional) To further improve performance and battery life, you can add your router's gateway IP address and also pick a static IP for your remote. You will also have to set the static IP on your router.
+4) (Optional) To further improve performance and battery life, you can add your router's gateway IP address and also pick a static IP for your remote. You will also have to set the static IP on your router.  
+5) (diyHue sketch only) Push and hold buttons 1 and 3 until the led lights up, and release. This will register the remote in diyHue and it will pop up in Hue app.
 
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/ap_screen.png)
 

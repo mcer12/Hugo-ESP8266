@@ -2,8 +2,9 @@
 void startConfigPortal() {
   startBlinking(CONFIG_BLINK_SPEED);
   WiFi.mode(WIFI_AP);
-  IPAddress ap_ip(10, 10, 10, 0);
-  WiFi.softAPConfig(ap_ip, ap_ip, IPAddress(255, 255, 255, 0));
+  IPAddress ap_gtw(10, 10, 10, 1);
+  IPAddress ap_ip(10, 10, 10, 1);
+  WiFi.softAPConfig(ap_ip, ap_gtw, IPAddress(255, 255, 255, 0));
   WiFi.softAP(AP_NAME);
   IPAddress ip = WiFi.softAPIP();
   Serial.print("Config portal IP address: ");
@@ -12,6 +13,7 @@ void startConfigPortal() {
   server.begin();
 
   delay(5000);
+  
   while (deviceMode == CONFIG_MODE) { // BLOCKING INFINITE LOOP
     if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH || millis() - configTimer > CONFIG_TIMEOUT) {
       stopBlinking();
@@ -84,7 +86,7 @@ void handleRoot() {
   html += "\"> </div> <h2>diyHue settings</h2> <p>For the remote to work, specify your diyHue bridge IP address.<br>For example: \"192.168.0.100\"</p> <div class=\"row\"> <label for=\"bridge\">Bridge IP</label> <input type=\"text\" id=\"bridge\" name=\"bridge\" value=\"";
   html += json["bridge"].as<const char*>();
   html += "\"> </div> <div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
-  html += "<div class=\"github\"><p>diyHue firmware v1.0, check out <a href=\"https://github.com/mcer12/Hugh-ESP8266\" target=\"_blank\"><strong>Hugh Switch</strong> on GitHub</a></p></div>";
+  html += "<div class=\"github\"><p>diyHue firmware v1.1, check out <a href=\"https://github.com/mcer12/Hugh-ESP8266\" target=\"_blank\"><strong>Hugh Switch</strong> on GitHub</a></p></div>";
   html += "</div> </body> </html>";
   server.send(200, "text/html", html);
 

@@ -15,7 +15,21 @@ void stopBlinking() {
 }
 
 void goToSleep() {
-  Serial.println("going to sleep");
+  Serial.println("going to sleep"); 
+  
+  /* 
+   *  This should force all buttons to discharge
+   *  and allow for faster response time 
+  */
+  pinMode(button1_pin, OUTPUT);
+  pinMode(button2_pin, OUTPUT);
+  pinMode(button3_pin, OUTPUT);
+  pinMode(button4_pin, OUTPUT);
+  digitalWrite(button1_pin, LOW);
+  digitalWrite(button2_pin, LOW);
+  digitalWrite(button3_pin, LOW);
+  digitalWrite(button4_pin, LOW);
+  
   yield();
   delay(5);
   ESP.deepSleep(0);
@@ -37,7 +51,7 @@ void sendHttpRequest(String buttonUrl) {
   if (batteryPercent > 100) batteryPercent = 100;
   
   buttonUrl.replace("[blvl]", (String)batteryPercent);
-  buttonUrl.replace("[mac]", WiFi.macAddress());
+  buttonUrl.replace("[mac]", macToStr(mac));
   
   if (buttonUrl.length() == 0) {
     Serial.println("Button URL is not defined. Set it in config portal.");

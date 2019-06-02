@@ -15,7 +15,21 @@ void stopBlinking() {
 }
 
 void goToSleep() {
-  Serial.println("going to sleep");
+  Serial.println("Going to sleep...");
+  
+  /* 
+   *  This should force all buttons to discharge
+   *  and allow for faster response time 
+  */
+  pinMode(button1_pin, OUTPUT);
+  pinMode(button2_pin, OUTPUT);
+  pinMode(button3_pin, OUTPUT);
+  pinMode(button4_pin, OUTPUT);
+  digitalWrite(button1_pin, LOW);
+  digitalWrite(button2_pin, LOW);
+  digitalWrite(button3_pin, LOW);
+  digitalWrite(button4_pin, LOW);
+
   yield();
   delay(5);
   ESP.deepSleep(0);
@@ -32,16 +46,16 @@ String macToStr(const uint8_t* mac) {
   return result;
 }
 
-void sendHttpRequest(int button) {
+void sendHttpRequest(int requestCode) {
   const char* bridgeIp = json["bridge"].as<const char*>();
   if (bridgeIp[0] == '\0') {
     Serial.println("diyHue bridge is not specified. Check your configuration.");
     return;
   }
   int batteryPercent = batteryPercentage();
-  if(batteryPercent > 100) batteryPercent = 100;
+  if (batteryPercent > 100) batteryPercent = 100;
   WiFiClient client;
-  String url = "/switch?mac=" + macToStr(mac) + "&button=" + button + "&b_level=" + batteryPercent;
+  String url = "/switch?mac=" + macToStr(mac) + "&button=" + requestCode + "&b_level=" + batteryPercent;
   client.connect(bridgeIp, 80);
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                "Host: " + bridgeIp + "\r\n" +

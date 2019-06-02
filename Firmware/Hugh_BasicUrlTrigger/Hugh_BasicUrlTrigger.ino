@@ -60,6 +60,8 @@ void setup() {
 
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
+  
+  delay(50); // This small delay is required for correct button detection
 
   button = readButtons();
 
@@ -93,6 +95,7 @@ void setup() {
 
     int iterator = 0;
     while (WiFi.status() != WL_CONNECTED) {
+      iterator++;
       if (iterator > 100) {
         deviceMode = CONFIG_MODE;
         Serial.print("failed to connect: ");
@@ -106,10 +109,10 @@ void setup() {
     Serial.println(WiFi.SSID());
     Serial.print("Mac address: ");
     Serial.println(WiFi.macAddress());
-    WiFi.macAddress(mac);
     Serial.print("IP: ");
     Serial.println(WiFi.localIP());
     */
+    WiFi.macAddress(mac);
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("No credentials set, go to config mode");

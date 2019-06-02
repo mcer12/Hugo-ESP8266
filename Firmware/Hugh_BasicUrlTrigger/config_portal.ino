@@ -11,7 +11,8 @@ void startConfigPortal() {
   server.on("/", handleRoot);
   server.begin();
 
-  delay(5000);
+  delay(3000);
+  
   while (deviceMode == CONFIG_MODE) { // BLOCKING INFINITE LOOP
     if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH || millis() - configTimer > CONFIG_TIMEOUT) {
       stopBlinking();

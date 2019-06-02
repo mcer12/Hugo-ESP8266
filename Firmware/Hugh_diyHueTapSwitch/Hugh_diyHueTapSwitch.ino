@@ -50,7 +50,7 @@ ESP8266WebServer server(80);
 DynamicJsonDocument json(1024); // config buffer
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(74880);
 
   pinMode(16, OUTPUT);
   pinMode(button1_pin, INPUT);
@@ -61,6 +61,8 @@ void setup() {
 
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
+  
+  delay(50); // This small delay is required for correct button detection
 
   button = readButtons();
 
@@ -89,12 +91,13 @@ void setup() {
       }
     }
 
-    serializeJson(json, Serial);
+    //serializeJson(json, Serial);
 
     WiFi.begin(ssid, pass);
 
     int iterator = 0;
     while (WiFi.status() != WL_CONNECTED) {
+      iterator++;
       if (iterator > 100) {
         deviceMode = CONFIG_MODE;
         Serial.print("Failed to connect to wifi");
@@ -112,6 +115,7 @@ void setup() {
     Serial.print("IP: ");
     Serial.println(WiFi.localIP());
 */
+    WiFi.macAddress(mac);
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("No credentials set, go to config mode");
@@ -121,23 +125,6 @@ void setup() {
 
   rst_info *rinfo;
   rinfo = ESP.getResetInfoPtr();
-
-  if ((*rinfo).reason != REASON_DEEP_SLEEP_AWAKE) {
-
-    WiFiClient client;
-    client.connect(bridgeIp, 80);
-
-    //register device
-    String url = "/switch";
-    url += "?devicetype=" + (String)switchType;
-    url += "&mac=" + macToStr(mac);
-
-    //###Registering device
-    client.connect(bridgeIp, 80);
-    client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-                 "Host: " + bridgeIp + "\r\n" +
-                 "Connection: close\r\n\r\n");
-  }
 
   ArduinoOTA.setHostname(OTA_NAME);
   ArduinoOTA.begin();
@@ -169,6 +156,8 @@ void loop() {
   toggleOTAMode();
 
   toggleConfigMode();
+  
+  toggleRegisterRequest();
 
   if (deviceMode != NORMAL_MODE) return;
 

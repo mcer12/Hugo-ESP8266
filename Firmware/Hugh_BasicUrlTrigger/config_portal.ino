@@ -2,7 +2,7 @@
 void startConfigPortal() {
   startBlinking(CONFIG_BLINK_SPEED);
   WiFi.mode(WIFI_AP);
-  IPAddress ap_ip(10, 10, 10, 0);
+  IPAddress ap_ip(10, 10, 10, 1);
   WiFi.softAPConfig(ap_ip, ap_ip, IPAddress(255, 255, 255, 0));
   WiFi.softAP(AP_NAME);
   IPAddress ip = WiFi.softAPIP();
@@ -101,7 +101,7 @@ void handleRoot() {
   html += "\"> </div> <div class=\"row\"> <label for=\"b4\">Button 4 url</label> <input type=\"text\" id=\"b4\" name=\"b4\" value=\"";
   html += json["b4"].as<const char*>();
   html += "\"> </div> <div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
-  html += "<div class=\"github\"><p>Basic firmware v1.1, check out <a href=\"https://github.com/mcer12/Hugh-ESP8266\" target=\"_blank\"><strong>Hugh Switch</strong> on GitHub</a></p></div>";
+  html += "<div class=\"github\"><p>Basic firmware v1.1b, check out <a href=\"https://github.com/mcer12/Hugh-ESP8266\" target=\"_blank\"><strong>Hugh Switch</strong> on GitHub</a></p></div>";
   html += "</div> </body> </html>";
   server.send(200, "text/html", html);
 

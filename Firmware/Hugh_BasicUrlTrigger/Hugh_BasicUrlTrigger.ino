@@ -1,3 +1,44 @@
+/*
+  Hugh ESP8266
+  basic firmware
+
+  This is the original firmware bundled with the remote.
+
+  For more information and help, head to Hugh's github repository:
+  https://github.com/mcer12/Hugh-ESP8266
+
+  Do you find Hugh great? Get yourself another one on Tindie:
+  https://www.tindie.com/products/nicethings/hugh-esp8266-4-button-wifi-remote/
+
+  Credits to Marius Motea for his great project. His project was the reason to design
+  the remote in the first place and firmware sketch was initially based on it.
+  https://github.com/diyhue/diyHue
+
+  ***
+
+  MIT License
+
+  Copyright (c) 2019 Martin Cerny
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+*/
+
 #include <FS.h>
 #include <ArduinoJson.h>
 
@@ -60,7 +101,7 @@ void setup() {
 
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
-  
+
   delay(50); // This small delay is required for correct button detection
 
   button = readButtons();
@@ -96,21 +137,22 @@ void setup() {
     int iterator = 0;
     while (WiFi.status() != WL_CONNECTED) {
       iterator++;
-      if (iterator > 100) {
+      if (iterator > 400) { // 4s timeout
         deviceMode = CONFIG_MODE;
-        Serial.print("failed to connect: ");
+        Serial.print("Failed to connect to: ");
+        Serial.println(ssid);
         break;
       }
-      delay(5);
+      delay(10);
     }
     /*
-    Serial.println("Wifi connected...");
-    Serial.print("SSID: ");
-    Serial.println(WiFi.SSID());
-    Serial.print("Mac address: ");
-    Serial.println(WiFi.macAddress());
-    Serial.print("IP: ");
-    Serial.println(WiFi.localIP());
+      Serial.println("Wifi connected...");
+      Serial.print("SSID: ");
+      Serial.println(WiFi.SSID());
+      Serial.print("Mac address: ");
+      Serial.println(WiFi.macAddress());
+      Serial.print("IP: ");
+      Serial.println(WiFi.localIP());
     */
     WiFi.macAddress(mac);
   } else {
@@ -123,7 +165,8 @@ void setup() {
   rst_info *rinfo;
   rinfo = ESP.getResetInfoPtr();
 
-  ArduinoOTA.setHostname(OTA_NAME);
+  String ota_name = "Hugh_" + macLastThreeSegments(mac);
+  ArduinoOTA.setHostname(ota_name.c_str());
   ArduinoOTA.begin();
 
   ArduinoOTA.onStart([]() {

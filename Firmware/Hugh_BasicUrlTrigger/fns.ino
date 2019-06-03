@@ -46,6 +46,14 @@ String macToStr(const uint8_t* mac) {
   return result;
 }
 
+String macLastThreeSegments(const uint8_t* mac) {
+  String result;
+  for (int i = 2; i < 6; ++i) {
+    result += String(mac[i], 16);
+  }
+  return result;
+}
+
 void sendHttpRequest(String buttonUrl) {
   int batteryPercent = batteryPercentage();
   if (batteryPercent > 100) batteryPercent = 100;
@@ -53,7 +61,7 @@ void sendHttpRequest(String buttonUrl) {
   buttonUrl.replace("[blvl]", (String)batteryPercent);
   buttonUrl.replace("[mac]", macToStr(mac));
   
-  if (buttonUrl.length() == 0) {
+  if (buttonUrl.length() == 0 || buttonUrl == "null" || buttonUrl == NULL) {
     Serial.println("Button URL is not defined. Set it in config portal.");
     return;
   }

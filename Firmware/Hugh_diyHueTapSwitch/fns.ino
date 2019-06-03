@@ -46,6 +46,14 @@ String macToStr(const uint8_t* mac) {
   return result;
 }
 
+String macLastThreeSegments(const uint8_t* mac) {
+  String result;
+  for (int i = 2; i < 6; ++i) {
+    result += String(mac[i], 16);
+  }
+  return result;
+}
+
 void sendHttpRequest(int requestCode) {
   const char* bridgeIp = json["bridge"].as<const char*>();
   if (bridgeIp[0] == '\0') {

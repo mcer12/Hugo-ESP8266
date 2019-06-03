@@ -21,6 +21,7 @@ void goToSleep() {
    *  This should force all buttons to discharge
    *  and allow for faster response time 
   */
+  /*
   pinMode(button1_pin, OUTPUT);
   pinMode(button2_pin, OUTPUT);
   pinMode(button3_pin, OUTPUT);
@@ -29,7 +30,7 @@ void goToSleep() {
   digitalWrite(button2_pin, LOW);
   digitalWrite(button3_pin, LOW);
   digitalWrite(button4_pin, LOW);
-
+  */
   yield();
   delay(5);
   ESP.deepSleep(0);

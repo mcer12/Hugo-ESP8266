@@ -26,7 +26,7 @@ diyHue github: https://github.com/diyhue/diyHue
 2) To exit configuration portal, either save changes or press any of the buttons.
 
 ## Flashing custom FW
-You can flash your own Arduino sketch or pick one in this project's Firmwares directory. 
+You can flash your own Arduino sketch or pick one in this project's Firmwares directory. This guide assumes you have experience with flashing esp8266 and Arduino IDE.
 
 ### A) USB
 1) Connect the device to your PC via microUSB connector

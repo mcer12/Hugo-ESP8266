@@ -4,6 +4,7 @@ Welcome to official git rep for Hugh, universal wifi remote.
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/hugh.jpg)
 
 ## Useful information
+**IMPORTANT FOR FIRMWARE 1.0 USERS:** If you're unable to connect to config AP, update to latest firmware version.  
 3D printable case available here:  
 https://www.thingiverse.com/thing:3641618  
 If you use diyHue emulator, there is custom sketch in Firmwares directory just for that!  
@@ -42,8 +43,8 @@ Do NOT connect VCC to external power source!
 
 ## Useful information for making custom sketch
 1) you need to set GPIO16 low at the beginning of setup() if you want to use buttons in your sketch. Otherwise anytime you push any button, Hugh will restart.
-pinMode(16, OUTPUT);
-digitalWrite(16, LOW);
+pinMode(16, OUTPUT);  
+digitalWrite(16, LOW);  
 
 ## CREDITS
 Marius Motea and his diyHue project (https://github.com/diyhue/diyHue). His project was the reason to design the remote in the first place and firmware sketch was initially based on it.

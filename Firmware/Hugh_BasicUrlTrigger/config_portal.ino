@@ -1,6 +1,7 @@
 
 void startConfigPortal() {
   startBlinking(CONFIG_BLINK_SPEED);
+  WiFi.disconnect(true);
   WiFi.mode(WIFI_AP);
   IPAddress ap_ip(10, 10, 10, 1);
   WiFi.softAPConfig(ap_ip, ap_ip, IPAddress(255, 255, 255, 0));
@@ -12,7 +13,7 @@ void startConfigPortal() {
   server.begin();
 
   delay(3000);
-  
+
   while (deviceMode == CONFIG_MODE) { // BLOCKING INFINITE LOOP
     if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH || millis() - configTimer > CONFIG_TIMEOUT) {
       stopBlinking();

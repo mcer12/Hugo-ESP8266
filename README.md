@@ -4,7 +4,7 @@ Welcome to official git rep for Hugh, universal wifi remote.
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/hugh.jpg)
 
 ## Useful information
-**IMPORTANT FOR FIRMWARE 1.0 USERS:** If you're unable to connect to config AP, update to latest firmware version.  
+**IMPORTANT FOR FIRMWARE 1.0 (May 2019 orders):** If you're unable to connect to config AP, update to latest firmware version.  
 3D printable case available here:  
 https://www.thingiverse.com/thing:3641618  
 UPDATE: Added two more top covers to choose from, one with shapes and one without pictograms for easy remixing  

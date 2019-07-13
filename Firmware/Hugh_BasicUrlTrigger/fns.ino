@@ -16,22 +16,7 @@ void stopBlinking() {
 
 void goToSleep() {
   Serial.println("going to sleep"); 
-  
-  /* 
-   *  This should force all buttons to discharge
-   *  and allow for faster response time 
-  */
-  /*
-  pinMode(button1_pin, OUTPUT);
-  pinMode(button2_pin, OUTPUT);
-  pinMode(button3_pin, OUTPUT);
-  pinMode(button4_pin, OUTPUT);
-  digitalWrite(button1_pin, LOW);
-  digitalWrite(button2_pin, LOW);
-  digitalWrite(button3_pin, LOW);
-  digitalWrite(button4_pin, LOW);
-  */
-  
+
   yield();
   delay(5);
   ESP.deepSleep(0);
@@ -83,6 +68,15 @@ void sendHttpRequest(String buttonUrl) {
 }
 
 int readButtons() {
+  if (digitalRead(button1_pin) == HIGH && digitalRead(button2_pin) == HIGH) {
+    return 5;
+  }
+  if (digitalRead(button2_pin) == HIGH && digitalRead(button3_pin) == HIGH) {
+    return 6;
+  }
+  if (digitalRead(button3_pin) == HIGH && digitalRead(button4_pin) == HIGH) {
+    return 7;
+  }
   if (digitalRead(button1_pin) == HIGH) {
     return 1;
   } else if (digitalRead(button2_pin) == HIGH) {

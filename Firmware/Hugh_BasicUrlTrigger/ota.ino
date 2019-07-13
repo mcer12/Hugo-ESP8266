@@ -1,7 +1,8 @@
 void startOTA() {
   startBlinking(OTA_BLINK_SPEED);
 
-  delay(5000);
+  delay(3000);
+  
   while (millis() - otaTimer < OTA_TIMEOUT) {
     if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH) {
       stopBlinking();
@@ -16,9 +17,9 @@ void startOTA() {
 }
 
 void toggleOTAMode() {
-  if (digitalRead(button2_pin) == HIGH && digitalRead(button3_pin) == HIGH) {
+  if (digitalRead(button1_pin) == HIGH && digitalRead(button3_pin) == HIGH) {
     int i = 0;
-    while (digitalRead(button2_pin) == HIGH && digitalRead(button3_pin) == HIGH && i < 200) {
+    while (digitalRead(button1_pin) == HIGH && digitalRead(button3_pin) == HIGH && i < 200) {
       delay(10);
 
       if (i > 100) {

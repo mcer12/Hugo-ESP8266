@@ -91,6 +91,7 @@ DynamicJsonDocument json(1024); // config buffer
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("");
 
   pinMode(16, OUTPUT);
   pinMode(button1_pin, INPUT);
@@ -102,7 +103,7 @@ void setup() {
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
 
-  delay(50); // This small delay is required for correct button detection
+  delay(10); // This small delay is required for correct button detection
 
   button = readButtons();
 
@@ -214,6 +215,18 @@ void loop() {
   else if (button == 4) {
     Serial.println("B4");
     sendHttpRequest(json["b4"].as<String>());
+  }
+  else if (button == 5) {
+    Serial.println("B5 (B1+B2 combo)");
+    sendHttpRequest(json["b5"].as<String>());
+  }
+  else if (button == 6) {
+    Serial.println("B6 (B2+B3 combo)");
+    sendHttpRequest(json["b6"].as<String>());
+  }
+  else if (button == 7) {
+    Serial.println("B7 (B3+B4 combo)");
+    sendHttpRequest(json["b7"].as<String>());
   }
   digitalWrite(5, HIGH);
   delay(20);

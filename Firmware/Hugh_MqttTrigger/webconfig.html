@@ -20,7 +20,7 @@
             text-decoration: underline;
         }
         .wrapper{
-            padding: 50px 0;
+            margin: 50px 0;
         }
         .container{
             margin: auto;
@@ -71,16 +71,12 @@
             background: none;
             border-radius: 5px;
             transition: .15s;
-            box-shadow: none;
+            box-shadow: 0;
             outline: none;
-        }
-        input[type="text"]:hover,
-        input[type="password"]:hover{
-            border-color: #ccc;
         }
         input[type="text"]:focus,
         input[type="password"]:focus{
-            border-color: #fff;
+            border-color: #ccc;
         }
         button{
             display: block;
@@ -135,7 +131,7 @@
     </style>
     <style media="all and (max-width: 520px)">
         .wrapper{
-            padding: 0 0 20px 0;
+            margin: 0 0 20px 0;
         }
         .container{
             padding: 25px 15px;
@@ -196,27 +192,13 @@
                 <label for="b4">Button 4 url</label>
                 <input type="text" id="b4" name="b4" value="@">
             </div>
-            <h2>Button combinations</h2>
-            <p>Push two neighbouring buttons together and have them act as a virtual button.</p>
-            <div class="row">
-                <label for="b5">B1+B2 url</label>
-                <input type="text" id="b5" name="b5" value="@">
-            </div>
-            <div class="row">
-                <label for="b6">B2+B3 url</label>
-                <input type="text" id="b6" name="b6" value="@">
-            </div>
-            <div class="row">
-                <label for="b7">B3+B4 url</label>
-                <input type="text" id="b7" name="b7" value="@">
-            </div>
             <div class="row">
                 <button type="submit">Save and reboot</button>
             </div>
         </form>
     </div>
     <div class="github">
-        <p>Basic firmware v1.3, check out <a href="https://github.com/mcer12/Hugh-ESP8266" target="_blank"><strong>Hugh</strong> on GitHub</a></p>
+        <p>Basic firmware v1.0, check out <a href="https://github.com/mcer12/Hugh-ESP8266" target="_blank"><strong>Hugh</strong> on GitHub</a></p>
     </div>
 </div>
 

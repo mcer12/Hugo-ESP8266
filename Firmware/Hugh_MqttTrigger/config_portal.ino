@@ -12,7 +12,7 @@ void startConfigPortal() {
   server.on("/", handleRoot);
   server.begin();
 
-  delay(3000);
+  delay(3000); // delay to prevent accidental shut down of config portal
 
   while (deviceMode == CONFIG_MODE) { // BLOCKING INFINITE LOOP
     if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH || millis() - configTimer > CONFIG_TIMEOUT) {
@@ -25,6 +25,23 @@ void startConfigPortal() {
 
 }
 
+void startLocalConfigPortal() {
+  startBlinking(CONFIG_BLINK_SPEED);
+  server.on("/", handleRoot);
+  server.begin();
+
+  delay(3000); // delay to prevent accidental shut down of config portal
+
+  while (deviceMode == CONFIG_MODE_LOCAL) { // BLOCKING INFINITE LOOP
+    if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH || millis() - configTimer > CONFIG_TIMEOUT) {
+      stopBlinking();
+      goToSleep();
+      return;
+    }
+    server.handleClient();
+  }
+}
+
 void toggleConfigMode() {
   if (digitalRead(button1_pin) == HIGH && digitalRead(button4_pin) == HIGH) {
     int i = 0;
@@ -33,6 +50,22 @@ void toggleConfigMode() {
 
       if (i > 100) {
         deviceMode = CONFIG_MODE;
+        configTimer = millis(); // start counter
+        return;
+      }
+      i++;
+    }
+  }
+}
+
+void toggleLocalConfigMode() {
+  if (digitalRead(button2_pin) == HIGH && digitalRead(button4_pin) == HIGH) {
+    int i = 0;
+    while (digitalRead(button2_pin) == HIGH && digitalRead(button4_pin) == HIGH && i < 200) {
+      delay(10);
+
+      if (i > 100) {
+        deviceMode = CONFIG_MODE_LOCAL;
         configTimer = millis(); // start counter
         return;
       }
@@ -59,26 +92,51 @@ void handleRoot() {
     if (server.hasArg("sn")) {
       json["sn"] = server.arg("sn");
     }
-    if (server.hasArg("b1")) {
-      json["b1"] = server.arg("b1");
+    if (server.hasArg("m1")) {
+      json["m1"] = server.arg("m1");
     }
-    if (server.hasArg("b2")) {
-      json["b2"] = server.arg("b2");
+    if (server.hasArg("b1t")) {
+      json["b1t"] = server.arg("b1t");
     }
-    if (server.hasArg("b3")) {
-      json["b3"] = server.arg("b3");
+    if (server.hasArg("b2t")) {
+      json["b2t"] = server.arg("b2t");
     }
-    if (server.hasArg("b4")) {
-      json["b4"] = server.arg("b4");
+    if (server.hasArg("b3t")) {
+      json["b3t"] = server.arg("b3t");
     }
-    if (server.hasArg("b5")) {
-      json["b5"] = server.arg("b5");
+    if (server.hasArg("b4t")) {
+      json["b4t"] = server.arg("b4t");
     }
-    if (server.hasArg("b6")) {
-      json["b6"] = server.arg("b6");
+    if (server.hasArg("b5t")) {
+      json["b5t"] = server.arg("b5t");
     }
-    if (server.hasArg("b7")) {
-      json["b7"] = server.arg("b7");
+    if (server.hasArg("b6t")) {
+      json["b6t"] = server.arg("b6t");
+    }
+    if (server.hasArg("b7t")) {
+      json["b7t"] = server.arg("b7t");
+    }
+    
+    if (server.hasArg("b1p")) {
+      json["b1p"] = server.arg("b1p");
+    }
+    if (server.hasArg("b2p")) {
+      json["b2p"] = server.arg("b2p");
+    }
+    if (server.hasArg("b3p")) {
+      json["b3p"] = server.arg("b3p");
+    }
+    if (server.hasArg("b4p")) {
+      json["b4p"] = server.arg("b4p");
+    }
+    if (server.hasArg("b5p")) {
+      json["b5p"] = server.arg("b5p");
+    }
+    if (server.hasArg("b6p")) {
+      json["b6p"] = server.arg("b6p");
+    }
+    if (server.hasArg("b7p")) {
+      json["b7p"] = server.arg("b7p");
     }
     saveConfig();
   }
@@ -102,27 +160,44 @@ void handleRoot() {
   html += json["gw"].as<const char*>();
   html += "\"> </div> <div class=\"row\"> <label for=\"sn\">Subnet mask (optional):</label> <input type=\"text\" id=\"sn\" name=\"sn\" value=\"";
   html += json["sn"].as<const char*>();
+
   html += "\"> </div>";
-  html += "<h2>Buttons settings</h2> <p>Assign target URL for each button.<br>You can also use [blvl] operator to add battery percentage and [mac] for mac address (for use as unique identifier).<br>For example: \"http://example.com/?trigger=button1&battery_percentage=[blvl]&mac=[mac]\"</p>";
-  html += "<div class=\"row\"> <label for=\"b1\">Button 1 url</label> <input type=\"text\" id=\"b1\" name=\"b1\" value=\"";
-  html += json["b1"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b2\">Button 2 url</label> <input type=\"text\" id=\"b2\" name=\"b2\" value=\"";
-  html += json["b2"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b3\">Button 3 url</label> <input type=\"text\" id=\"b3\" name=\"b3\" value=\"";
-  html += json["b3"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b4\">Button 4 url</label> <input type=\"text\" id=\"b4\" name=\"b4\" value=\"";
-  html += json["b4"].as<const char*>();
+  html += "<h2>MQTT Configuration</h2> <div class=\"row\"> <label for=\"m1\">MQTT Server adress</label> <input type=\"text\" id=\"m1\" name=\"m1\" value=\"";
+  html += json["m1"].as<const char*>();
   html += "\"> </div>";
+  html += "<h2>Button settings</h2> <p>Assign MQTT Topic and Payload for each button<br></p> <div class=\"row\"> <label for=\"b1t\">Button 1 Topic</label> <input type=\"text\" id=\"b1t\" name=\"b1t\" value=\"";
+  html += json["b1t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b1p\">Button 1 Payload</label> <input type=\"text\" id=\"b1p\" name=\"b1p\" value=\"";
+  html += json["b1p"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b2t\">Button 2 Topic</label> <input type=\"text\" id=\"b2t\" name=\"b2t\" value=\"";
+  html += json["b2t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b2p\">Button 2 Payload</label> <input type=\"text\" id=\"b2p\" name=\"b2p\" value=\"";
+  html += json["b2p"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b3t\">Button 3 Topic</label> <input type=\"text\" id=\"b3t\" name=\"b3t\" value=\"";
+  html += json["b3t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b3p\">Button 3 Payload</label> <input type=\"text\" id=\"b3p\" name=\"b3p\" value=\"";
+  html += json["b3p"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b4t\">Button 4 Topic</label> <input type=\"text\" id=\"b4t\" name=\"b4t\" value=\"";
+  html += json["b4t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b4p\">Button 4 Payload</label> <input type=\"text\" id=\"b4p\" name=\"b4p\" value=\"";
+  html += json["b4p"].as<const char*>();
+  html += "\">";
   html += "<h2>Button combinations</h2><p>Push two neighbouring buttons together and have them act as a virtual button.</p>";
-  html += "<div class=\"row\"> <label for=\"b5\">B1+B2 url</label> <input type=\"text\" id=\"b5\" name=\"b5\" value=\"";
-  html += json["b5"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b6\">B2+B3 url</label> <input type=\"text\" id=\"b6\" name=\"b6\" value=\"";
-  html += json["b6"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b7\">B4+B5 url</label> <input type=\"text\" id=\"b7\" name=\"b7\" value=\"";
-  html += json["b7"].as<const char*>();
-  html += "\"> </div>";
-  html += "<div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
-  html += "<div class=\"github\"><p>Basic firmware v1.3, check out <a href=\"https://github.com/mcer12/Hugh-ESP8266\" target=\"_blank\"><strong>Hugh Switch</strong> on GitHub</a></p></div>";
+  html += "<div class=\"row\"><label for=\"b5t\">B1+B2 Topic</label> <input type=\"text\" id=\"b5t\" name=\"b5t\" value=\"";
+  html += json["b5t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b5p\">B1+B2 Payload</label> <input type=\"text\" id=\"b5p\" name=\"b5p\" value=\"";
+  html += json["b5p"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b6t\">B2+B3 Topic</label> <input type=\"text\" id=\"b6t\" name=\"b6t\" value=\"";
+  html += json["b6t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b6p\">B2+B3 Payload</label> <input type=\"text\" id=\"b6p\" name=\"b6p\" value=\"";
+  html += json["b6p"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b7t\">B3+B4 Topic</label> <input type=\"text\" id=\"b7t\" name=\"b7t\" value=\"";
+  html += json["b7t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b7p\">B3+B4 Payload</label> <input type=\"text\" id=\"b7p\" name=\"b7p\" value=\"";
+  html += json["b7p"].as<const char*>();
+  html += "\">";
+  html += "</div> <div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
+  html += "<div class=\"github\"> <p>MQTT firmware v1.1, check out <a href=\"https://github.com/mcer12/Hugh-ESP8266\" target=\"_blank\"><strong>Hugh</strong> on GitHub</a></p> </div>";
   html += "</div> </body> </html>";
   server.send(200, "text/html", html);
 

@@ -15,7 +15,22 @@ void stopBlinking() {
 }
 
 void goToSleep() {
-  Serial.println("going to sleep"); 
+  Serial.println("going to sleep");
+
+  /*
+      This should force all buttons to discharge
+      and allow for faster response time
+  */
+  /*
+    pinMode(button1_pin, OUTPUT);
+    pinMode(button2_pin, OUTPUT);
+    pinMode(button3_pin, OUTPUT);
+    pinMode(button4_pin, OUTPUT);
+    digitalWrite(button1_pin, LOW);
+    digitalWrite(button2_pin, LOW);
+    digitalWrite(button3_pin, LOW);
+    digitalWrite(button4_pin, LOW);
+  */
 
   yield();
   delay(5);
@@ -41,13 +56,29 @@ String macLastThreeSegments(const uint8_t* mac) {
   return result;
 }
 
-void sendHttpRequest(String buttonUrl) {
+void mqtt_connect() {
+  //while (!client.connected()) {
+  Serial.print("Attempting MQTT connection...");
+  if (client.connect("esp/hugh")) {
+    client.publish("esp/hugh/battery", "" + batteryPercentage());
+    Serial.println("" + batteryPercentage());
+    Serial.println("connected");
+  } else {
+    Serial.print("failed, rc=");
+    Serial.print(client.state());
+    goToSleep();
+  }
+  //}
+}
+
+/*
+  void sendHttpRequest(String buttonUrl) {
   int batteryPercent = batteryPercentage();
   if (batteryPercent > 100) batteryPercent = 100;
-  
+
   buttonUrl.replace("[blvl]", (String)batteryPercent);
   buttonUrl.replace("[mac]", macToStr(mac));
-  
+
   if (buttonUrl.length() == 0 || buttonUrl == "null" || buttonUrl == NULL) {
     Serial.println("Button URL is not defined. Set it in config portal.");
     return;
@@ -65,8 +96,8 @@ void sendHttpRequest(String buttonUrl) {
   http.end();   //Close connection
   Serial.println(buttonUrl);
 
-}
-
+  }
+*/
 int readButtons() {
   if (digitalRead(button1_pin) == HIGH && digitalRead(button2_pin) == HIGH) {
     return 5;
@@ -128,9 +159,9 @@ bool readConfig() {
   File stateFile = SPIFFS.open("/config.json", "r");
   if (!stateFile) {
     Serial.println("Failed to read config file... first run?");
-    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["b1"] = json["b2"] = json["b3"] = json["b4"] = json["b5"] = json["b6"] = json["b7"] = "";
+    Serial.println("Creating file and going to sleep. Try again!");
+    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["m1"] = json["b1t"] = json["b2t"] = json["b3t"] = json["b4t"] = json["b5t"] = json["b6t"] = json["b7t"] = json["b1p"] = json["b2p"] = json["b3p"] = json["b4p"] = json["b5p"] = json["b6p"] = json["b7p"] = "";
     saveConfig();
-    Serial.println("New config file has been created.");
     //goToSleep();
     return false;
   }

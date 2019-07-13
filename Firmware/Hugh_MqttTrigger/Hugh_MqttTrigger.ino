@@ -1,8 +1,7 @@
 /*
   Hugh ESP8266
-  basic firmware
-
-  This is the original firmware bundled with the remote.
+  basic mqtt firmware by gon
+  based on the BasicUrlTrigger firmware
 
   For more information and help, head to Hugh's github repository:
   https://github.com/mcer12/Hugh-ESP8266
@@ -13,6 +12,8 @@
   Credits to Marius Motea for his great project. His project was the reason to design
   the remote in the first place and firmware sketch was initially based on it.
   https://github.com/diyhue/diyHue
+
+  May contain code lines from the PubSubClient examples
 
   ***
 
@@ -48,6 +49,7 @@
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
 #include <WiFiUdp.h>
+#include <PubSubClient.h>
 
 #include <ArduinoOTA.h>
 #include <Ticker.h>
@@ -66,6 +68,7 @@
 #define NORMAL_MODE 0
 #define OTA_MODE 1
 #define CONFIG_MODE 2
+#define CONFIG_MODE_LOCAL 3
 
 uint8_t deviceMode = NORMAL_MODE;
 
@@ -86,12 +89,13 @@ byte mac[6];
 
 Ticker ticker;
 ESP8266WebServer server(80);
+WiFiClient espClient;
+PubSubClient client(espClient);
 
 DynamicJsonDocument json(1024); // config buffer
 
 void setup() {
   Serial.begin(115200);
-  Serial.println("");
 
   pinMode(16, OUTPUT);
   pinMode(button1_pin, INPUT);
@@ -118,6 +122,8 @@ void setup() {
   const char* ip = json["ip"].as<const char*>();
   const char* gw = json["gw"].as<const char*>();
   const char* sn = json["sn"].as<const char*>();
+
+  const char* m1 = json["m1"].as<const char*>();
 
   if (ssid[0] != '\0' && pass[0] != '\0') {
     WiFi.mode(WIFI_STA);
@@ -146,19 +152,32 @@ void setup() {
       }
       delay(10);
     }
-    /*
-      Serial.println("Wifi connected...");
-      Serial.print("SSID: ");
-      Serial.println(WiFi.SSID());
-      Serial.print("Mac address: ");
-      Serial.println(WiFi.macAddress());
-      Serial.print("IP: ");
-      Serial.println(WiFi.localIP());
-    */
+    /* */
+    Serial.println("Wifi connected...");
+    Serial.print("SSID: ");
+    Serial.println(WiFi.SSID());
+    Serial.print("Mac address: ");
+    Serial.println(WiFi.macAddress());
+    Serial.print("IP: ");
+    Serial.println(WiFi.localIP());
+
     WiFi.macAddress(mac);
+
+    // MQTT SETUP
+    if (m1[0] != '\0') {
+      IPAddress broker_address;
+      if (!broker_address.fromString(m1)) {
+        Serial.println("Error setting up mqtt server IP. Check your configuration.");
+      } else {
+        client.setServer(broker_address, 1883);
+      }
+    } else {
+      Serial.println("mqtt server IP not set. Check your configuration.");
+    }
+
   } else {
     deviceMode = CONFIG_MODE;
-    Serial.println("No credentials set, go to config mode");
+    Serial.println("No credentials set, going to config mode");
     //startConfigPortal();
     //goToSleep();
   }
@@ -194,43 +213,106 @@ void loop() {
     return;
   }
 
+  if (deviceMode == CONFIG_MODE_LOCAL) {
+    Serial.println("STARTING LOCAL CONFIG MODE, PRESS ANY BUTTON TO EXIT...");
+    Serial.print("IP: ");
+    Serial.println(WiFi.localIP());
+    startLocalConfigPortal();
+    Serial.println("RETURNING TO NORMAL MODE...");
+    return;
+  }
+
   toggleOTAMode();
 
   toggleConfigMode();
 
+  toggleLocalConfigMode();
+
   if (deviceMode != NORMAL_MODE) return;
+
+  mqtt_connect();
+
+  client.publish("esp/hugh/battery", String(batteryPercentage()).c_str());
+  Serial.println(String(batteryPercentage()));
 
   if (button == 1) {
     Serial.println("B1");
-    sendHttpRequest(json["b1"].as<String>());
+    const char* b1t = json["b1t"].as<const char*>();
+    const char* b1p = json["b1p"].as<const char*>();
+    if (strlen(b1t) > 0 && strlen(b1p) > 0) {
+      client.publish(b1t, b1p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
   }
   else if (button == 2) {
     Serial.println("B2");
-    sendHttpRequest(json["b2"].as<String>());
+    const char* b2t = json["b2t"].as<const char*>();
+    const char* b2p = json["b2p"].as<const char*>();
+    if (strlen(b2t) > 0 && strlen(b2p) > 0) {
+      client.publish(b2t, b2p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
   }
   else if (button == 3) {
     Serial.println("B3");
-    sendHttpRequest(json["b3"].as<String>());
+    const char* b3t = json["b3t"].as<const char*>();
+    const char* b3p = json["b3p"].as<const char*>();
+    if (strlen(b3t) > 0 && strlen(b3p) > 0) {
+      client.publish(b3t, b3p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
   }
   else if (button == 4) {
     Serial.println("B4");
-    sendHttpRequest(json["b4"].as<String>());
+    const char* b4t = json["b4t"].as<const char*>();
+    const char* b4p = json["b4p"].as<const char*>();
+    if (strlen(b4t) > 0 && strlen(b4p) > 0) {
+      client.publish(b4t, b4p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
   }
   else if (button == 5) {
-    Serial.println("B5 (B1+B2 combo)");
-    sendHttpRequest(json["b5"].as<String>());
+    Serial.println("B6 (B1+B2 combo)");
+    const char* b5t = json["b5t"].as<const char*>();
+    const char* b5p = json["b5p"].as<const char*>();
+    if (strlen(b5t) > 0 && strlen(b5p) > 0) {
+      client.publish(b5t, b5p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
   }
   else if (button == 6) {
     Serial.println("B6 (B2+B3 combo)");
-    sendHttpRequest(json["b6"].as<String>());
+    const char* b6t = json["b6t"].as<const char*>();
+    const char* b6p = json["b6p"].as<const char*>();
+    if (strlen(b6t) > 0 && strlen(b6p) > 0) {
+      client.publish(b6t, b6p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
   }
   else if (button == 7) {
     Serial.println("B7 (B3+B4 combo)");
-    sendHttpRequest(json["b7"].as<String>());
+    const char* b7t = json["b7t"].as<const char*>();
+    const char* b7p = json["b7p"].as<const char*>();
+    if (strlen(b7t) > 0 && strlen(b7p) > 0) {
+      client.publish(b7t, b7p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
   }
+
+  client.loop();
+  client.disconnect();
+
   digitalWrite(5, HIGH);
   delay(20);
   digitalWrite(5, LOW);
+
 
   //if (millis() - sleepMillis >= sleepDelay) {
   goToSleep();

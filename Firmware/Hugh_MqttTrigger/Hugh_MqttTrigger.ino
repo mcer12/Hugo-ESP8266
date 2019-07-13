@@ -107,7 +107,7 @@ void setup() {
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
 
-//  delay(50); // This small delay is required for correct button detection
+  delay(10); // This small delay is required for correct button detection
 
   button = readButtons();
 
@@ -242,7 +242,7 @@ void loop() {
     if (strlen(b1t) > 0 && strlen(b1p) > 0) {
       client.publish(b1t, b1p);
     } else {
-      Serial.println("Bad B1");
+      Serial.println("Button target is not defined. Set it in config portal.");
     }
   }
   else if (button == 2) {
@@ -252,7 +252,7 @@ void loop() {
     if (strlen(b2t) > 0 && strlen(b2p) > 0) {
       client.publish(b2t, b2p);
     } else {
-      Serial.println("Bad B2");
+      Serial.println("Button target is not defined. Set it in config portal.");
     }
   }
   else if (button == 3) {
@@ -262,7 +262,7 @@ void loop() {
     if (strlen(b3t) > 0 && strlen(b3p) > 0) {
       client.publish(b3t, b3p);
     } else {
-      Serial.println("Bad B3");
+      Serial.println("Button target is not defined. Set it in config portal.");
     }
   }
   else if (button == 4) {
@@ -272,7 +272,37 @@ void loop() {
     if (strlen(b4t) > 0 && strlen(b4p) > 0) {
       client.publish(b4t, b4p);
     } else {
-      Serial.println("Bad B4");
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
+  }
+  else if (button == 5) {
+    Serial.println("B6 (B1+B2 combo)");
+    const char* b5t = json["b5t"].as<const char*>();
+    const char* b5p = json["b5p"].as<const char*>();
+    if (strlen(b5t) > 0 && strlen(b5p) > 0) {
+      client.publish(b5t, b5p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
+  }
+  else if (button == 6) {
+    Serial.println("B6 (B2+B3 combo)");
+    const char* b6t = json["b6t"].as<const char*>();
+    const char* b6p = json["b6p"].as<const char*>();
+    if (strlen(b6t) > 0 && strlen(b6p) > 0) {
+      client.publish(b6t, b6p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
+    }
+  }
+  else if (button == 7) {
+    Serial.println("B7 (B3+B4 combo)");
+    const char* b7t = json["b7t"].as<const char*>();
+    const char* b7p = json["b7p"].as<const char*>();
+    if (strlen(b7t) > 0 && strlen(b7p) > 0) {
+      client.publish(b7t, b7p);
+    } else {
+      Serial.println("Button target is not defined. Set it in config portal.");
     }
   }
 

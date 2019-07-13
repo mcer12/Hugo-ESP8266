@@ -99,6 +99,15 @@ void mqtt_connect() {
   }
 */
 int readButtons() {
+  if (digitalRead(button1_pin) == HIGH && digitalRead(button2_pin) == HIGH) {
+    return 5;
+  }
+  if (digitalRead(button2_pin) == HIGH && digitalRead(button3_pin) == HIGH) {
+    return 6;
+  }
+  if (digitalRead(button3_pin) == HIGH && digitalRead(button4_pin) == HIGH) {
+    return 7;
+  }
   if (digitalRead(button1_pin) == HIGH) {
     return 1;
   } else if (digitalRead(button2_pin) == HIGH) {
@@ -151,9 +160,9 @@ bool readConfig() {
   if (!stateFile) {
     Serial.println("Failed to read config file... first run?");
     Serial.println("Creating file and going to sleep. Try again!");
-    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["b1t"] = json["b2t"] = json["b3t"] = json["b4t"] = json["b1p"] = json["b2p"] = json["b3p"] = json["b4p"] = json["m1"] = json["m2"] = "";
+    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["m1"] = json["b1t"] = json["b2t"] = json["b3t"] = json["b4t"] = json["b5t"] = json["b6t"] = json["b7t"] = json["b1p"] = json["b2p"] = json["b3p"] = json["b4p"] = json["b5p"] = json["b6p"] = json["b7p"] = "";
     saveConfig();
-    goToSleep();
+    //goToSleep();
     return false;
   }
   DeserializationError error = deserializeJson(json, stateFile.readString());

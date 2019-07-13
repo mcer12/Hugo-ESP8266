@@ -59,9 +59,9 @@ void toggleConfigMode() {
 }
 
 void toggleLocalConfigMode() {
-  if (digitalRead(button1_pin) == HIGH && digitalRead(button3_pin) == HIGH) {
+  if (digitalRead(button2_pin) == HIGH && digitalRead(button4_pin) == HIGH) {
     int i = 0;
-    while (digitalRead(button1_pin) == HIGH && digitalRead(button3_pin) == HIGH && i < 200) {
+    while (digitalRead(button2_pin) == HIGH && digitalRead(button4_pin) == HIGH && i < 200) {
       delay(10);
 
       if (i > 100) {
@@ -107,6 +107,16 @@ void handleRoot() {
     if (server.hasArg("b4t")) {
       json["b4t"] = server.arg("b4t");
     }
+    if (server.hasArg("b5t")) {
+      json["b5t"] = server.arg("b5t");
+    }
+    if (server.hasArg("b6t")) {
+      json["b6t"] = server.arg("b6t");
+    }
+    if (server.hasArg("b7t")) {
+      json["b7t"] = server.arg("b7t");
+    }
+    
     if (server.hasArg("b1p")) {
       json["b1p"] = server.arg("b1p");
     }
@@ -119,6 +129,15 @@ void handleRoot() {
     if (server.hasArg("b4p")) {
       json["b4p"] = server.arg("b4p");
     }
+    if (server.hasArg("b5p")) {
+      json["b5p"] = server.arg("b5p");
+    }
+    if (server.hasArg("b6p")) {
+      json["b6p"] = server.arg("b6p");
+    }
+    if (server.hasArg("b7p")) {
+      json["b7p"] = server.arg("b7p");
+    }
     saveConfig();
   }
 
@@ -129,10 +148,7 @@ void handleRoot() {
   if (batteryPercent >= 80) batteryColor = "#7ca53e";
   if (batteryPercent > 100) batteryColor = "#3e7ea5";
 
-
-
-
-  String html = "<!DOCTYPE html> <html> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Hugh Configuration</title> <style> html,body{ margin: 0; padding: 0; font-size: 16px; background: #444444; } body,*{ box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; } a{ color: inherit; text-decoration: underline; } .wrapper{ margin: 50px 0; } .container{ margin: auto; padding: 40px; max-width: 500px; color: #fff; background: #000; box-shadow: 0 0 100px rgba(0,0,0,.5); border-radius: 50px; } .row{ margin-bottom: 15px; } h1{ margin: 0 0 10px 0; font-family: Arial, sans-serif; font-weight: 300; font-size: 2rem; } h1 + p{ margin-bottom: 30px; } h2{ margin: 30px 0 0 0; font-family: Arial, sans-serif; font-weight: 300; font-size: 1.5rem; } p{ font-size: .85rem; margin: 0 0 20px 0; color: rgba(255,255,255,.7); } label{ display: block; width: 100%; margin-bottom: 5px; } input[type=\"text\"], input[type=\"password\"]{ display: inline-block; width: 100%; height: 42px; line-height: 38px; padding: 0 20px; color: #fff; border: 2px solid #666; background: none; border-radius: 5px; transition: .15s; box-shadow: none; outline: none; } input[type=\"text\"]:focus, input[type=\"password\"]:focus{ border-color: #ccc; } button{ display: block; width: 100%; padding: 10px 20px; font-size: 1rem; font-weight: 700; text-transform: uppercase; background: #ff9c29; border: 0; border-radius: 5px; cursor: pointer; transition: .15s; outline: none; } button:hover{ background: #ffba66; } .github{ margin-top: 15px; text-align: center; } .github a{ color: #ff9c29; transition: .15s; } .github a:hover{ color: #ffba66; } .bat p{margin: 0 0 5px 0; text-align: center; text-transform: uppercase; font-size: .8rem;}.bat > div{position: relative; margin: 0 auto 20px; width: 300px; height: 10px; background: #272727; border-radius: 5px;}.bat > div > div{position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; min-width: 10px;} </style> <style media=\"all and (max-width: 520px)\"> .wrapper{ margin: 0 0 20px 0; } .container{ padding: 25px 15px; border-radius: 0; } </style> </head> <body> <div class=\"wrapper\">";
+  String html = "<!DOCTYPE html> <html> <head> <meta charset=\"UTF-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <title>Hugh Configuration</title> <style> html,body{ margin: 0; padding: 0; font-size: 16px; background: #444444; } body,*{ box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; } a{ color: inherit; text-decoration: underline; } .wrapper{ padding: 50px 0; } .container{ margin: auto; padding: 40px; max-width: 500px; color: #fff; background: #000; box-shadow: 0 0 100px rgba(0,0,0,.5); border-radius: 50px; } .row{ margin-bottom: 15px; } h1{ margin: 0 0 10px 0; font-family: Arial, sans-serif; font-weight: 300; font-size: 2rem; } h1 + p{ margin-bottom: 30px; } h2{ margin: 30px 0 0 0; font-family: Arial, sans-serif; font-weight: 300; font-size: 1.5rem; } p{ font-size: .85rem; margin: 0 0 20px 0; color: rgba(255,255,255,.7); } label{ display: block; width: 100%; margin-bottom: 5px; } input[type=\"text\"], input[type=\"password\"]{ display: inline-block; width: 100%; height: 42px; line-height: 38px; padding: 0 20px; color: #fff; border: 2px solid #666; background: none; border-radius: 5px; transition: .15s; box-shadow: none; outline: none; } input[type=\"text\"]:hover, input[type=\"password\"]:hover{ border-color: #ababab; } input[type=\"text\"]:focus, input[type=\"password\"]:focus{ border-color: #fff; } button{ display: block; width: 100%; padding: 10px 20px; font-size: 1rem; font-weight: 700; text-transform: uppercase; background: #ff9c29; border: 0; border-radius: 5px; cursor: pointer; transition: .15s; outline: none; } button:hover{ background: #ffba66; } .github{ margin-top: 15px; text-align: center; } .github a{ color: #ff9c29; transition: .15s; } .github a:hover{ color: #ffba66; } .bat p{margin: 0 0 5px 0; text-align: center; text-transform: uppercase; font-size: .8rem;}.bat > div{position: relative; margin: 0 auto 20px; width: 300px; height: 10px; background: #272727; border-radius: 5px;}.bat > div > div{position: absolute; left: 0; top: 0; bottom: 0; border-radius: 5px; min-width: 10px;} </style> <style media=\"all and (max-width: 520px)\"> .wrapper{ padding: 20px 0; } .container{ padding: 25px 15px; border-radius: 0; } </style> </head> <body> <div class=\"wrapper\">";
   html += "<div class=\"bat\"><p>Battery level: " + ((batteryPercent > 100) ? "Charging" : (String)batteryPercent + "%") + "</p><div><div style=\"background: " + batteryColor + ";width: " + ((batteryPercent > 100) ? 100 : batteryPercent) + "%\"></div></div></div>";
   html += "<div class=\"container\"> <form method=\"post\" action=\"/\"> <h1>Hugh Configuration</h1> <p>Press any of the Hugh's buttons to shut down config AP and resume normal function.</p> <h2>Network settings</h2> <p>Select your network settings here.</p> <div class=\"row\"> <label for=\"ssid\">WiFi SSID</label> <input type=\"text\" id=\"ssid\" name=\"ssid\" value=\"";
   html += json["ssid"].as<const char*>();
@@ -145,9 +161,11 @@ void handleRoot() {
   html += "\"> </div> <div class=\"row\"> <label for=\"sn\">Subnet mask (optional):</label> <input type=\"text\" id=\"sn\" name=\"sn\" value=\"";
   html += json["sn"].as<const char*>();
 
-  html += "\"> </div> <h2>MQTT Configuration</h2> <div class=\"row\"> <label for=\"m1\">MQTT Server adress</label> <input type=\"text\" id=\"m1\" name=\"m1\" value=\"";
+  html += "\"> </div>";
+  html += "<h2>MQTT Configuration</h2> <div class=\"row\"> <label for=\"m1\">MQTT Server adress</label> <input type=\"text\" id=\"m1\" name=\"m1\" value=\"";
   html += json["m1"].as<const char*>();
-  html += "\"> </div> <h2>MQTT Button settings</h2> <p>Assign Topic and Payload<br></p> <div class=\"row\"> <label for=\"b1t\">Button 1 Topic</label> <input type=\"text\" id=\"b1t\" name=\"b1t\" value=\"";
+  html += "\"> </div>";
+  html += "<h2>Button settings</h2> <p>Assign MQTT Topic and Payload for each button<br></p> <div class=\"row\"> <label for=\"b1t\">Button 1 Topic</label> <input type=\"text\" id=\"b1t\" name=\"b1t\" value=\"";
   html += json["b1t"].as<const char*>();
   html += "\"> </div> <div class=\"row\"> <label for=\"b1p\">Button 1 Payload</label> <input type=\"text\" id=\"b1p\" name=\"b1p\" value=\"";
   html += json["b1p"].as<const char*>();
@@ -163,8 +181,23 @@ void handleRoot() {
   html += json["b4t"].as<const char*>();
   html += "\"> </div> <div class=\"row\"> <label for=\"b4p\">Button 4 Payload</label> <input type=\"text\" id=\"b4p\" name=\"b4p\" value=\"";
   html += json["b4p"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
-  html += "<div class=\"github\"> <p>MQTT firmware v1.0, check out <a href=\"https://github.com/mcer12/Hugh-ESP8266\" target=\"_blank\"><strong>Hugh</strong> on GitHub</a></p> </div>";
+  html += "\">";
+  html += "<h2>Button combinations</h2><p>Push two neighbouring buttons together and have them act as a virtual button.</p>";
+  html += "<div class=\"row\"><label for=\"b5t\">B1+B2 Topic</label> <input type=\"text\" id=\"b5t\" name=\"b5t\" value=\"";
+  html += json["b5t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b5p\">B1+B2 Payload</label> <input type=\"text\" id=\"b5p\" name=\"b5p\" value=\"";
+  html += json["b5p"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b6t\">B2+B3 Topic</label> <input type=\"text\" id=\"b6t\" name=\"b6t\" value=\"";
+  html += json["b6t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b6p\">B2+B3 Payload</label> <input type=\"text\" id=\"b6p\" name=\"b6p\" value=\"";
+  html += json["b6p"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b7t\">B3+B4 Topic</label> <input type=\"text\" id=\"b7t\" name=\"b7t\" value=\"";
+  html += json["b7t"].as<const char*>();
+  html += "\"> </div> <div class=\"row\"> <label for=\"b7p\">B3+B4 Payload</label> <input type=\"text\" id=\"b7p\" name=\"b7p\" value=\"";
+  html += json["b7p"].as<const char*>();
+  html += "\">";
+  html += "</div> <div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
+  html += "<div class=\"github\"> <p>MQTT firmware v1.1, check out <a href=\"https://github.com/mcer12/Hugh-ESP8266\" target=\"_blank\"><strong>Hugh</strong> on GitHub</a></p> </div>";
   html += "</div> </body> </html>";
   server.send(200, "text/html", html);
 

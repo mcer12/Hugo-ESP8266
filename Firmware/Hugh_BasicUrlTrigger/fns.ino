@@ -134,10 +134,10 @@ bool readConfig() {
   File stateFile = SPIFFS.open("/config.json", "r");
   if (!stateFile) {
     Serial.println("Failed to read config file... first run?");
-    Serial.println("Creating file and going to sleep. Try again!");
     json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["b1"] = json["b2"] = json["b3"] = json["b4"] = "";
     saveConfig();
-    goToSleep();
+    Serial.println("New config file has been created.");
+    //goToSleep();
     return false;
   }
   DeserializationError error = deserializeJson(json, stateFile.readString());

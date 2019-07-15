@@ -55,6 +55,11 @@ NOTE: For OTA, you need to first set your wifi credentials in Hugh's config port
 Once you open up the enclosure, you will find the usual breakout pins for ESP8266: VCC, GND, RX, TX, GPIO0. You can solder a header to them but it won't fit in the enclosure anymore so I advise to solder the wires directly if you decide to go with this option.  
 IMPORTANT: Do NOT connect VCC to external power source!
 
+## Battery management
+The device has built-in battery sensing, using high resistance voltage divider. You can check current battery level in config AP. You can also send battery percentage with button press (you can set this in config AP). Just keep in mind that the percentage is just a rough estimation and is non-linear. So if you're at 20% it might be a good idea to recharge even though it should be OK for another month or more.  
+- Voltage below 3.5V is interpreded as 0%. 
+- Battery protection cuts power at 2.9V, if you drain battery completely.
+
 ## Useful information for making custom sketch
 1) You need to set GPIO16 low at the beginning of setup() if you want to use buttons in your sketch. Otherwise anytime you push any button, Hugh will restart.  
 pinMode(16, OUTPUT);  

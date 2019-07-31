@@ -1,7 +1,7 @@
-# Hugh-ESP8266
+# Hugo-ESP8266
 
-Welcome to official git rep for Hugh, universal wifi remote.  
-![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/develop/Images/hugh.jpg)
+Welcome to official git rep for Hugo, universal wifi remote.  
+![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/develop/Images/hugh.jpg)
 
 ## UPDATES
 **RELEASE 1.3 (14/7/2019)**:  
@@ -12,8 +12,8 @@ Welcome to official git rep for Hugh, universal wifi remote.
 3D printable case available here:  
 https://www.thingiverse.com/thing:3641618  
 
-Need another Hugh? Get it here:  
-https://www.tindie.com/products/mcer12/hugh-esp8266-4-button-wifi-remote/  
+Need another Hugo? Get it here:  
+https://www.tindie.com/products/mcer12/hugo-esp8266-4-button-wifi-remote/  
 
 If you use diyHue emulator, just head to Firmwares directory for diyHueTapSwitch sketch!  
 diyHue github: https://github.com/diyhue/diyHue  
@@ -27,7 +27,7 @@ diyHue github: https://github.com/diyhue/diyHue
 4) (Optional) To further improve performance and battery life, you can add your router's gateway IP address and also pick a static IP for your remote. You will also have to set the static IP on your router.  
 5) (diyHue sketch only) Push and hold buttons 1 and 3 until the led lights up, and release. This will register the remote in diyHue and it will pop up in Hue app.
 
-![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/master/Images/ap_screen.png)
+![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/master/Images/ap_screen.png)
 
 ## Changing settings
 1) Push and hold button 1 and 4 until the led starts blinking and release. Configuration access point will show up for 5 minutes.
@@ -42,7 +42,7 @@ You can flash your own Arduino sketch or pick one in this project's Firmwares di
 3) Upload the sketch. The integrated CH340 chip should handle up to 921600 baud but if you're having issues, lower the baud rate to 115200  
 NOTE: If the device doesnt show up in available ports, you probably don't have CH340 driver installed
 
-![alt text](https://raw.githubusercontent.com/mcer12/Hugh-ESP8266/master/Images/ide_settings.png)
+![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/master/Images/ide_settings.png)
 
 ### B) Arduino OTA
 NOTE: For OTA, you need to first set your wifi credentials in Hugh's config portal.  

@@ -1,13 +1,13 @@
 /*
-  Hugh ESP8266
+  Hugo ESP8266
   basic mqtt firmware by gon
   based on the BasicUrlTrigger firmware
 
-  For more information and help, head to Hugh's github repository:
-  https://github.com/mcer12/Hugh-ESP8266
+  For more information and help, head to Hugo's github repository:
+  https://github.com/mcer12/Hugo-ESP8266
 
-  Do you find Hugh great? Get yourself another one on Tindie:
-  https://www.tindie.com/products/nicethings/hugh-esp8266-4-button-wifi-remote/
+  Do you find Hugo great? Get yourself another one on Tindie:
+  https://www.tindie.com/products/nicethings/hugo-esp8266-4-button-wifi-remote/
 
   Credits to Marius Motea for his great project. His project was the reason to design
   the remote in the first place and firmware sketch was initially based on it.
@@ -54,8 +54,8 @@
 #include <ArduinoOTA.h>
 #include <Ticker.h>
 
-#define OTA_NAME "Hugh"
-#define AP_NAME "HughConfig"
+#define OTA_NAME "Hugo"
+#define AP_NAME "HugoConfig"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -185,7 +185,7 @@ void setup() {
   rst_info *rinfo;
   rinfo = ESP.getResetInfoPtr();
 
-  String ota_name = "Hugh_" + macLastThreeSegments(mac);
+  String ota_name = "Hugo_" + macLastThreeSegments(mac);
   ArduinoOTA.setHostname(ota_name.c_str());
   ArduinoOTA.begin();
 
@@ -232,7 +232,7 @@ void loop() {
 
   mqtt_connect();
 
-  client.publish("esp/hugh/battery", String(batteryPercentage()).c_str());
+  client.publish("esp/hugo/battery", String(batteryPercentage()).c_str());
   Serial.println(String(batteryPercentage()));
 
   if (button == 1) {

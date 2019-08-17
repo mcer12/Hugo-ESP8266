@@ -57,7 +57,7 @@ String macLastThreeSegments(const uint8_t* mac) {
 }
 
 void publishBatteryLevel() {
-  client.publish("esp/hugo/battery", String(batteryPercentage()).c_str());
+  client.publish(String("hugo" + macLastThreeSegments(mac) + "/battery").c_str(), String(batteryPercentage()).c_str());
   Serial.print("Battery: ");
   Serial.println(batteryPercentage());
 }

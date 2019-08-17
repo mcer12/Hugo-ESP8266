@@ -56,6 +56,7 @@
 
 #define OTA_NAME "Hugo"
 #define AP_NAME "HugoConfig"
+#define FW_VERSION "1.2"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -97,6 +98,8 @@ DynamicJsonDocument json(1024); // config buffer
 void setup() {
   Serial.begin(115200);
 
+  Serial.println("starting");
+
   pinMode(16, OUTPUT);
   pinMode(button1_pin, INPUT);
   pinMode(button2_pin, INPUT);
@@ -110,6 +113,7 @@ void setup() {
   delay(10); // This small delay is required for correct button detection
 
   button = readButtons();
+  Serial.println(button);
 
   if (!SPIFFS.begin()) {
     Serial.println("Failed to mount file system");
@@ -123,10 +127,12 @@ void setup() {
   const char* gw = json["gw"].as<const char*>();
   const char* sn = json["sn"].as<const char*>();
 
-  const char* m1 = json["m1"].as<const char*>();
+  const char* broker = json["broker"].as<const char*>();
+  int port = json["port"].as<int>();
 
   if (ssid[0] != '\0' && pass[0] != '\0') {
     WiFi.mode(WIFI_STA);
+    Serial.println("setting up wifi");
 
     if (ip[0] != '\0' && gw[0] != '\0' && sn[0] != '\0') {
       IPAddress ip_address, gateway_ip, subnet_mask;
@@ -142,6 +148,7 @@ void setup() {
     WiFi.begin(ssid, pass);
 
     int iterator = 0;
+
     while (WiFi.status() != WL_CONNECTED) {
       iterator++;
       if (iterator > 400) { // 4s timeout
@@ -152,7 +159,7 @@ void setup() {
       }
       delay(10);
     }
-    /* */
+
     Serial.println("Wifi connected...");
     Serial.print("SSID: ");
     Serial.println(WiFi.SSID());
@@ -164,20 +171,15 @@ void setup() {
     WiFi.macAddress(mac);
 
     // MQTT SETUP
-    if (m1[0] != '\0') {
-      IPAddress broker_address;
-      if (!broker_address.fromString(m1)) {
-        Serial.println("Error setting up mqtt server IP. Check your configuration.");
-      } else {
-        client.setServer(broker_address, 1883);
-      }
+    if (broker[0] != '\0' || port != 0) {
+      client.setServer(broker, port);
     } else {
-      Serial.println("mqtt server IP not set. Check your configuration.");
+      Serial.println("Broker IP or port is not set. Check your configuration.");
     }
 
   } else {
     deviceMode = CONFIG_MODE;
-    Serial.println("No credentials set, going to config mode");
+    Serial.println("No credentials set, going to config mode.");
     //startConfigPortal();
     //goToSleep();
   }
@@ -213,34 +215,26 @@ void loop() {
     return;
   }
 
-  if (deviceMode == CONFIG_MODE_LOCAL) {
-    Serial.println("STARTING LOCAL CONFIG MODE, PRESS ANY BUTTON TO EXIT...");
-    Serial.print("IP: ");
-    Serial.println(WiFi.localIP());
-    startLocalConfigPortal();
-    Serial.println("RETURNING TO NORMAL MODE...");
-    return;
-  }
-
   toggleOTAMode();
 
   toggleConfigMode();
 
-  toggleLocalConfigMode();
-
-  if (deviceMode != NORMAL_MODE) return;
-
   mqtt_connect();
 
-  client.publish("esp/hugo/battery", String(batteryPercentage()).c_str());
-  Serial.println(String(batteryPercentage()));
+  //toggleHassRegister();
+
+  if (deviceMode != NORMAL_MODE) return;
 
   if (button == 1) {
     Serial.println("B1");
     const char* b1t = json["b1t"].as<const char*>();
     const char* b1p = json["b1p"].as<const char*>();
     if (strlen(b1t) > 0 && strlen(b1p) > 0) {
-      client.publish(b1t, b1p);
+      if (client.publish(b1t, b1p)) {
+        Serial.println("B1 sent!");
+      } else {
+        Serial.println(client.state());
+      }
     } else {
       Serial.println("Button target is not defined. Set it in config portal.");
     }
@@ -249,6 +243,7 @@ void loop() {
     Serial.println("B2");
     const char* b2t = json["b2t"].as<const char*>();
     const char* b2p = json["b2p"].as<const char*>();
+    publishBatteryLevel();
     if (strlen(b2t) > 0 && strlen(b2p) > 0) {
       client.publish(b2t, b2p);
     } else {
@@ -259,6 +254,7 @@ void loop() {
     Serial.println("B3");
     const char* b3t = json["b3t"].as<const char*>();
     const char* b3p = json["b3p"].as<const char*>();
+    publishBatteryLevel();
     if (strlen(b3t) > 0 && strlen(b3p) > 0) {
       client.publish(b3t, b3p);
     } else {
@@ -269,6 +265,7 @@ void loop() {
     Serial.println("B4");
     const char* b4t = json["b4t"].as<const char*>();
     const char* b4p = json["b4p"].as<const char*>();
+    publishBatteryLevel();
     if (strlen(b4t) > 0 && strlen(b4p) > 0) {
       client.publish(b4t, b4p);
     } else {
@@ -279,6 +276,7 @@ void loop() {
     Serial.println("B6 (B1+B2 combo)");
     const char* b5t = json["b5t"].as<const char*>();
     const char* b5p = json["b5p"].as<const char*>();
+    publishBatteryLevel();
     if (strlen(b5t) > 0 && strlen(b5p) > 0) {
       client.publish(b5t, b5p);
     } else {
@@ -289,6 +287,7 @@ void loop() {
     Serial.println("B6 (B2+B3 combo)");
     const char* b6t = json["b6t"].as<const char*>();
     const char* b6p = json["b6p"].as<const char*>();
+    publishBatteryLevel();
     if (strlen(b6t) > 0 && strlen(b6p) > 0) {
       client.publish(b6t, b6p);
     } else {
@@ -299,6 +298,7 @@ void loop() {
     Serial.println("B7 (B3+B4 combo)");
     const char* b7t = json["b7t"].as<const char*>();
     const char* b7p = json["b7p"].as<const char*>();
+    publishBatteryLevel();
     if (strlen(b7t) > 0 && strlen(b7p) > 0) {
       client.publish(b7t, b7p);
     } else {

@@ -56,48 +56,25 @@ String macLastThreeSegments(const uint8_t* mac) {
   return result;
 }
 
+void publishBatteryLevel() {
+  client.publish("esp/hugo/battery", String(batteryPercentage()).c_str());
+  Serial.print("Battery: ");
+  Serial.println(batteryPercentage());
+}
+
 void mqtt_connect() {
   //while (!client.connected()) {
-  Serial.print("Attempting MQTT connection...");
-  if (client.connect("esp/hugh")) {
-    client.publish("esp/hugh/battery", "" + batteryPercentage());
-    Serial.println("" + batteryPercentage());
-    Serial.println("connected");
-  } else {
-    Serial.print("failed, rc=");
-    Serial.print(client.state());
-    goToSleep();
-  }
+    Serial.println("Attempting MQTT connection...");
+    if (client.connect(String("Hugo_" + macLastThreeSegments(mac)).c_str())/*, "mqtt_user", "mqtt_pass"*/) {
+      Serial.println("MQTT connected.");
+    } else {
+      Serial.print("MQTT connection attempt failed, rc=");
+      Serial.println(client.state());
+      goToSleep();
+    }
   //}
 }
 
-/*
-  void sendHttpRequest(String buttonUrl) {
-  int batteryPercent = batteryPercentage();
-  if (batteryPercent > 100) batteryPercent = 100;
-
-  buttonUrl.replace("[blvl]", (String)batteryPercent);
-  buttonUrl.replace("[mac]", macToStr(mac));
-
-  if (buttonUrl.length() == 0 || buttonUrl == "null" || buttonUrl == NULL) {
-    Serial.println("Button URL is not defined. Set it in config portal.");
-    return;
-  }
-  HTTPClient http;
-  http.begin(buttonUrl);
-
-  int httpCode = http.GET();
-
-  if (httpCode > 0) {
-    Serial.print("Successful request to URL: ");
-  } else {
-    Serial.print("Error connecting to URL: ");
-  }
-  http.end();   //Close connection
-  Serial.println(buttonUrl);
-
-  }
-*/
 int readButtons() {
   if (digitalRead(button1_pin) == HIGH && digitalRead(button2_pin) == HIGH) {
     return 5;
@@ -160,15 +137,13 @@ bool readConfig() {
   if (!stateFile) {
     Serial.println("Failed to read config file... first run?");
     Serial.println("Creating file and going to sleep. Try again!");
-    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["m1"] = json["b1t"] = json["b2t"] = json["b3t"] = json["b4t"] = json["b5t"] = json["b6t"] = json["b7t"] = json["b1p"] = json["b2p"] = json["b3p"] = json["b4p"] = json["b5p"] = json["b6p"] = json["b7p"] = "";
+    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["broker"] = json["port"] = json["b1t"] = json["b2t"] = json["b3t"] = json["b4t"] = json["b5t"] = json["b6t"] = json["b7t"] = json["b1p"] = json["b2p"] = json["b3p"] = json["b4p"] = json["b5p"] = json["b6p"] = json["b7p"] = "";
     saveConfig();
-    //goToSleep();
+    goToSleep();
     return false;
   }
   DeserializationError error = deserializeJson(json, stateFile.readString());
   stateFile.close();
-  //Serial.println("json:");
-  //serializeJson(json, Serial);
   return true;
 }
 

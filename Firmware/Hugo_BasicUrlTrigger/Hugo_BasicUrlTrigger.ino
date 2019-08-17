@@ -106,6 +106,7 @@ void setup() {
   delay(10); // This small delay is required for correct button detection
 
   button = readButtons();
+  Serial.println(button);
 
   if (!SPIFFS.begin()) {
     Serial.println("Failed to mount file system");

@@ -1,6 +1,5 @@
 void startOTA() {
   startBlinking(OTA_BLINK_SPEED);
-
   delay(5000);
   while (millis() - otaTimer < OTA_TIMEOUT) {
     if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH) {

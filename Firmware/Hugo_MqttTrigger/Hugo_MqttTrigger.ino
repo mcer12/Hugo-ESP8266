@@ -232,7 +232,7 @@ void loop() {
     const char* b1t = json["b1t"].as<const char*>();
     const char* b1p = json["b1p"].as<const char*>();
     if (strlen(b1t) > 0 && strlen(b1p) > 0) {
-      client.publish(b1t, b1p));
+      client.publish(b1t, b1p);
     } else {
       Serial.println("Button target is not defined. Set it in config portal.");
     }

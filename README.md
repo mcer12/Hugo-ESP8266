@@ -4,6 +4,9 @@ Welcome to official git rep for Hugo, universal wifi remote.
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/develop/Images/hugh.jpg)
 
 ## UPDATES
+**RELEASE 1.3 MQTT (24/8/2019)**:  
+- Significant MQTT firmware update, it's now fully compatible with home assistant incl. auto discovery  
+  
 **RELEASE 1.3 (14/7/2019)**:  
 - Button combinations added, that means 3 additional "virtual" buttons to use.  
 - MQTT firmware added

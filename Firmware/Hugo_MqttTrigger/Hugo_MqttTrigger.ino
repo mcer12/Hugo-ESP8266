@@ -224,7 +224,7 @@ void loop() {
   mqtt_connect();
 
   if (deviceMode == HASS_REGISTER_MODE) {
-    Serial.println("ATTEMTING TO REGISTER HOME ASSISTANT MQTT SENSOR...");
+    Serial.println("STARTING HOME ASSISTANT DISCOVERY...");
     doHassRegister();
     Serial.println("RETURNING TO NORMAL MODE...");
     return;

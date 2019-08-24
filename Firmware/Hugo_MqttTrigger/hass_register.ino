@@ -15,22 +15,14 @@ void toggleHassRegister() {
   }
 }
 
-void sendConfigPart(StaticJsonDocument<512>& payload, String configTopic, int currentPartNo, int partsCount) {
+void sendConfig(StaticJsonDocument<512>& payload, String configTopic) {
   char output[512];
   serializeJson(payload, output);
   Serial.println(output);
   if (client.publish(configTopic.c_str(), output)) {
-    Serial.print("Registration ");
-    Serial.print(currentPartNo);
-    Serial.print(" of ");
-    Serial.print(partsCount);
-    Serial.println(" done.");
+    Serial.print("Discovery data sent.");
   } else {
-    Serial.print("Registration ");
-    Serial.print(currentPartNo);
-    Serial.print(" of ");
-    Serial.print(partsCount);
-    Serial.print(" failed, json too large? Error = ");
+    Serial.print("Failed to send discovery data, error = ");
     Serial.println(client.state());
   }
   payload.clear();
@@ -40,7 +32,7 @@ void doHassRegister() {
 
   if (deviceMode != HASS_REGISTER_MODE) return;
 
-  Serial.println("Registering device");
+  Serial.println("Attemting to send discovery data...");
   StaticJsonDocument<512> payload;
   size_t payloadSize;
   String configTopic = "homeassistant/sensor/hugo_" + macLastThreeSegments(mac) + "/config";
@@ -57,12 +49,12 @@ void doHassRegister() {
   device["mf"] = "https://github.com/mcer12/Hugo-ESP8266";
   device["mdl"] = "Hugo-ESP8266";
   device["sw"] = FW_VERSION;
-  sendConfigPart(payload, configTopic, 5, 5);
+  sendConfig(payload, configTopic);
 
   client.loop();
   client.disconnect();
 
-  Serial.println("Registration completed, Hugo should now be discovered by Home Assistant. Use following topic to update values:");
+  Serial.println("Hugo should now be discovered by Home Assistant. Use following topic to update values:");
   Serial.println(stateTopic);
 
   digitalWrite(5, HIGH);

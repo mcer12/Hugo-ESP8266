@@ -63,15 +63,13 @@ void mqtt_connect() {
   while (!client.connected() && i < 50) {
     Serial.println("Attempting MQTT connection...");
     if (mqtt_usr[0] != '\0' && mqtt_pass[0] != '\0') {
-      if (client.connect(String("hugo_" + macLastThreeSegments(mac)).c_str()), mqtt_usr, mqtt_pass) {
-        Serial.println("MQTT connected.");
-        Serial.println(mqtt_usr);
-        Serial.println(mqtt_pass);
+      if (client.connect(String("hugo_" + macLastThreeSegments(mac)).c_str(), mqtt_usr, mqtt_pass)){
+        Serial.println("MQTT connected using credentials.");
         return;
       }
     } else {
       if (client.connect(String("hugo_" + macLastThreeSegments(mac)).c_str())) {
-        Serial.println("MQTT connected.");
+        Serial.println("MQTT connected anonymously.");
         return;
       }
     }

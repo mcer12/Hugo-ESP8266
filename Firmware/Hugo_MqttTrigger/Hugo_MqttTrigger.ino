@@ -39,7 +39,6 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 */
-
 #include <FS.h>
 #include <ArduinoJson.h>
 
@@ -50,13 +49,12 @@
 #include <ESP8266WebServer.h>
 #include <WiFiUdp.h>
 #include <PubSubClient.h>
-
 #include <ArduinoOTA.h>
 #include <Ticker.h>
 
 #define OTA_NAME "Hugo"
 #define AP_NAME "HugoConfig"
-#define FW_VERSION "1.2"
+#define FW_VERSION "1.3"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -70,6 +68,10 @@
 #define OTA_MODE 1
 #define CONFIG_MODE 2
 #define CONFIG_MODE_LOCAL 3
+#define HASS_REGISTER_MODE 4
+#if MQTT_MAX_PACKET_SIZE < 512  // If the max message size is too small, throw an error at compile time. See PubSubClient.cpp line 359
+  #error "MQTT_MAX_PACKET_SIZE is too small in libraries/PubSubClient/src/PubSubClient.h, increase it to 512"
+#endif
 
 uint8_t deviceMode = NORMAL_MODE;
 
@@ -201,6 +203,10 @@ void setup() {
 
 void loop() {
 
+  toggleOTAMode();
+
+  toggleConfigMode();
+
   if (deviceMode == OTA_MODE) {
     Serial.println("WAITING FOR OTA UPDATE...");
     startOTA();
@@ -215,99 +221,73 @@ void loop() {
     return;
   }
 
-  toggleOTAMode();
-
-  toggleConfigMode();
-
   mqtt_connect();
 
-  //toggleHassRegister();
+  if (deviceMode == HASS_REGISTER_MODE) {
+    Serial.println("ATTEMTING TO REGISTER HOME ASSISTANT MQTT SENSOR...");
+    doHassRegister();
+    Serial.println("RETURNING TO NORMAL MODE...");
+    return;
+  }
 
-  if (deviceMode != NORMAL_MODE) return;
+  toggleHassRegister();
 
-  publishBatteryLevel();
+  if (deviceMode == NORMAL_MODE) {
 
-  if (button == 1) {
-    Serial.println("B1");
-    const char* b1t = json["b1t"].as<const char*>();
-    const char* b1p = json["b1p"].as<const char*>();
-    if (strlen(b1t) > 0 && strlen(b1p) > 0) {
-      client.publish(b1t, b1p);
-    } else {
-      Serial.println("Button target is not defined. Set it in config portal.");
+    publishBatteryLevel();
+
+    if (button == 1) {
+      Serial.println("B1");
+      String b1t = json["b1t"].as<String>();
+      String b1p = json["b1p"].as<String>();
+      publishButtonData(b1t, b1p);
     }
-  }
-  else if (button == 2) {
-    Serial.println("B2");
-    const char* b2t = json["b2t"].as<const char*>();
-    const char* b2p = json["b2p"].as<const char*>();
-    if (strlen(b2t) > 0 && strlen(b2p) > 0) {
-      client.publish(b2t, b2p);
-    } else {
-      Serial.println("Button target is not defined. Set it in config portal.");
+    else if (button == 2) {
+      Serial.println("B2");
+      String b2t = json["b2t"].as<String>();
+      String b2p = json["b2p"].as<String>();
+      publishButtonData(b2t, b2p);
     }
-  }
-  else if (button == 3) {
-    Serial.println("B3");
-    const char* b3t = json["b3t"].as<const char*>();
-    const char* b3p = json["b3p"].as<const char*>();
-    if (strlen(b3t) > 0 && strlen(b3p) > 0) {
-      client.publish(b3t, b3p);
-    } else {
-      Serial.println("Button target is not defined. Set it in config portal.");
+    else if (button == 3) {
+      Serial.println("B3");
+      String b3t = json["b3t"].as<String>();
+      String b3p = json["b3p"].as<String>();
+      publishButtonData(b3t, b3p);
     }
-  }
-  else if (button == 4) {
-    Serial.println("B4");
-    const char* b4t = json["b4t"].as<const char*>();
-    const char* b4p = json["b4p"].as<const char*>();
-    if (strlen(b4t) > 0 && strlen(b4p) > 0) {
-      client.publish(b4t, b4p);
-    } else {
-      Serial.println("Button target is not defined. Set it in config portal.");
+    else if (button == 4) {
+      Serial.println("B4");
+      String b4t = json["b4t"].as<String>();
+      String b4p = json["b4p"].as<String>();
+      publishButtonData(b4t, b4p);
     }
-  }
-  else if (button == 5) {
-    Serial.println("B6 (B1+B2 combo)");
-    const char* b5t = json["b5t"].as<const char*>();
-    const char* b5p = json["b5p"].as<const char*>();
-    if (strlen(b5t) > 0 && strlen(b5p) > 0) {
-      client.publish(b5t, b5p);
-    } else {
-      Serial.println("Button target is not defined. Set it in config portal.");
+    else if (button == 5) {
+      Serial.println("B6 (B1+B2 combo)");
+      String b5t = json["b5t"].as<String>();
+      String b5p = json["b5p"].as<String>();
+      publishButtonData(b5t, b5p);
     }
-  }
-  else if (button == 6) {
-    Serial.println("B6 (B2+B3 combo)");
-    const char* b6t = json["b6t"].as<const char*>();
-    const char* b6p = json["b6p"].as<const char*>();
-    if (strlen(b6t) > 0 && strlen(b6p) > 0) {
-      client.publish(b6t, b6p);
-    } else {
-      Serial.println("Button target is not defined. Set it in config portal.");
+    else if (button == 6) {
+      Serial.println("B6 (B2+B3 combo)");
+      String b6t = json["b6t"].as<String>();
+      String b6p = json["b6p"].as<String>();
+      publishButtonData(b6t, b6p);
     }
-  }
-  else if (button == 7) {
-    Serial.println("B7 (B3+B4 combo)");
-    const char* b7t = json["b7t"].as<const char*>();
-    const char* b7p = json["b7p"].as<const char*>();
-    if (strlen(b7t) > 0 && strlen(b7p) > 0) {
-      client.publish(b7t, b7p);
-    } else {
-      Serial.println("Button target is not defined. Set it in config portal.");
+    else if (button == 7) {
+      Serial.println("B7 (B3+B4 combo)");
+      String b7t = json["b7t"].as<String>();
+      String b7p = json["b7p"].as<String>();
+      publishButtonData(b7t, b7p);
     }
   }
 
   client.loop();
   client.disconnect();
 
-  digitalWrite(5, HIGH);
-  delay(20);
-  digitalWrite(5, LOW);
+  if (deviceMode == NORMAL_MODE) {
+    digitalWrite(5, HIGH);
+    delay(20);
+    digitalWrite(5, LOW);
 
-
-  //if (millis() - sleepMillis >= sleepDelay) {
-  goToSleep();
-  //}
-
+    goToSleep();
+  }
 }

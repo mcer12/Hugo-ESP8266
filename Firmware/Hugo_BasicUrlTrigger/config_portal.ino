@@ -103,7 +103,7 @@ void handleRoot() {
   html += "\"> </div> <div class=\"row\"> <label for=\"sn\">Subnet mask (optional):</label> <input type=\"text\" id=\"sn\" name=\"sn\" value=\"";
   html += json["sn"].as<const char*>();
   html += "\"> </div>";
-  html += "<h2>Buttons settings</h2> <p>Assign target URL for each button.<br>You can also use [blvl] operator to add battery percentage and [mac] for mac address (for use as unique identifier).<br>For example: \"http://example.com/?trigger=button1&battery_percentage=[blvl]&mac=[mac]\"</p>";
+  html += "<h2>Buttons settings</h2> <p>Assign target URL for each button.<br>You can also use [blvl] shortcode to add battery percentage and [mac] for mac address (for use as unique identifier).<br>For example: \"http://example.com/?trigger=button1&battery_percentage=[blvl]&mac=[mac]\"</p>";
   html += "<div class=\"row\"> <label for=\"b1\">Button 1 url</label> <input type=\"text\" id=\"b1\" name=\"b1\" value=\"";
   html += json["b1"].as<const char*>();
   html += "\"> </div> <div class=\"row\"> <label for=\"b2\">Button 2 url</label> <input type=\"text\" id=\"b2\" name=\"b2\" value=\"";

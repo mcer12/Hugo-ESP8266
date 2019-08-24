@@ -50,29 +50,57 @@ String macToStr(const uint8_t* mac) {
 
 String macLastThreeSegments(const uint8_t* mac) {
   String result;
-  for (int i = 2; i < 6; ++i) {
-    result += String(mac[i], 16);
+  for (int i = 3; i < 6; ++i) {
+    result += String(mac[i], HEX);
   }
   return result;
 }
 
-void publishBatteryLevel() {
-  client.publish(String("hugo" + macLastThreeSegments(mac) + "/battery").c_str(), String(batteryPercentage()).c_str());
-  Serial.print("Battery: ");
-  Serial.println(batteryPercentage());
+void mqtt_connect() {
+  const char* mqtt_usr = json["mqttusr"].as<const char*>();
+  const char* mqtt_pass = json["mqttpass"].as<const char*>();
+  int i = 0;
+  while (!client.connected() && i < 50) {
+    Serial.println("Attempting MQTT connection...");
+    if (mqtt_usr[0] != '\0' && mqtt_pass[0] != '\0') {
+      if (client.connect(String("hugo_" + macLastThreeSegments(mac)).c_str()), mqtt_usr, mqtt_pass) {
+        Serial.println("MQTT connected.");
+        Serial.println(mqtt_usr);
+        Serial.println(mqtt_pass);
+        return;
+      }
+    } else {
+      if (client.connect(String("hugo_" + macLastThreeSegments(mac)).c_str())) {
+        Serial.println("MQTT connected.");
+        return;
+      }
+    }
+    ++i;
+    delay(10);
+  }
+  Serial.print("MQTT connection attempt failed, rc=");
+  Serial.println(client.state());
+  goToSleep();
 }
 
-void mqtt_connect() {
-  //while (!client.connected()) {
-    Serial.println("Attempting MQTT connection...");
-    if (client.connect(String("Hugo_" + macLastThreeSegments(mac)).c_str())/*, "mqtt_user", "mqtt_pass"*/) {
-      Serial.println("MQTT connected.");
-    } else {
-      Serial.print("MQTT connection attempt failed, rc=");
-      Serial.println(client.state());
-      goToSleep();
-    }
-  //}
+bool publishButtonData(String topic, String payload) {
+  topic.replace("[id]", macLastThreeSegments(mac));
+  if (topic.length() > 0 && payload.length() > 0) {
+    return client.publish(topic.c_str(), payload.c_str());
+  } else {
+    Serial.println("Button target is not defined. Set it in config portal.");
+  }
+}
+
+void publishBatteryLevel() {
+  String batTopic = json["batt"].as<String>();
+  batTopic.replace("[id]", macLastThreeSegments(mac));
+  if (batTopic.length() > 0) {
+    client.publish(batTopic.c_str(), String(batteryPercentage()).c_str());
+    Serial.print("Battery percentage: ");
+    Serial.print(batteryPercentage());
+    Serial.println("%");
+  }
 }
 
 int readButtons() {
@@ -118,7 +146,7 @@ int ReadAIN()
 /* Battery percentage estimation, this is not very accurate but close enough */
 uint8_t batteryPercentage() {
   int analogValue = ReadAIN();
-  if (analogValue > 1000) return 200; // CHARGING
+  if (analogValue > 1000) return 101; // CHARGING
   if (analogValue > 960) return 100;
   if (analogValue > 940) return 90;
   if (analogValue > 931) return 80;
@@ -137,7 +165,7 @@ bool readConfig() {
   if (!stateFile) {
     Serial.println("Failed to read config file... first run?");
     Serial.println("Creating file and going to sleep. Try again!");
-    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["broker"] = json["port"] = json["b1t"] = json["b2t"] = json["b3t"] = json["b4t"] = json["b5t"] = json["b6t"] = json["b7t"] = json["b1p"] = json["b2p"] = json["b3p"] = json["b4p"] = json["b5p"] = json["b6p"] = json["b7p"] = "";
+    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["broker"] = json["port"] = json["mqttusr"] = json["mqttpass"] = json["b1t"] = json["b2t"] = json["b3t"] = json["b4t"] = json["b5t"] = json["b6t"] = json["b7t"] = json["b1p"] = json["b2p"] = json["b3p"] = json["b4p"] = json["b5p"] = json["b6p"] = json["b7p"] = json["batt"] = "";
     saveConfig();
     goToSleep();
     return false;

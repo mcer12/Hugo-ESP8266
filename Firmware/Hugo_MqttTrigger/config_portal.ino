@@ -83,6 +83,12 @@ void handleRoot() {
     if (server.hasArg("port")) {
       json["port"] = server.arg("port");
     }
+    if (server.hasArg("mqttusr")) {
+      json["mqttusr"] = server.arg("mqttusr");
+    }
+    if (server.hasArg("mqttpass")) {
+      json["mqttpass"] = server.arg("mqttpass");
+    }
     
     if (server.hasArg("b1t")) {
       json["b1t"] = server.arg("b1t");
@@ -105,7 +111,6 @@ void handleRoot() {
     if (server.hasArg("b7t")) {
       json["b7t"] = server.arg("b7t");
     }
-    
     if (server.hasArg("b1p")) {
       json["b1p"] = server.arg("b1p");
     }
@@ -126,6 +131,9 @@ void handleRoot() {
     }
     if (server.hasArg("b7p")) {
       json["b7p"] = server.arg("b7p");
+    }
+    if (server.hasArg("batt")) {
+      json["batt"] = server.arg("batt");
     }
     saveConfig();
   }
@@ -152,14 +160,22 @@ void handleRoot() {
   html += json["sn"].as<const char*>();
   html += "\"> </div>";
   html += "<h2>MQTT Configuration</h2>";
-  html += "<p>Set your broker address as an IP or name address. For example: \"broker.example.com\" or \"192.168.0.1\"<br></p>";
+  html += "<p>Set your broker address as an IP or name address.<br>For example: \"broker.example.com\" or \"192.168.0.1\"</p>";
+  html += "<p>You can also define user and password for more security.<br></p>";
   html += "<div class=\"row\"> <label for=\"broker\">Broker adress</label> <input type=\"text\" id=\"broker\" name=\"broker\" value=\"";
   html += json["broker"].as<const char*>();
   html += "\"> </div>";
   html += "<div class=\"row\"> <label for=\"port\">Broker port</label> <input type=\"text\" id=\"port\" name=\"port\" value=\"";
   html += json["port"].as<const char*>();
   html += "\"> </div>";
-  html += "<h2>Button settings</h2> <p>Assign MQTT Topic and Payload for each button, for example:<br>Topic: \"esp/hugo/button\"<br>Payload: \"1\"<br></p>";
+  html += "<div class=\"row\"> <label for=\"mqttusr\">User (optional)</label> <input type=\"text\" id=\"mqttusr\" name=\"mqttusr\" value=\"";
+  html += json["mqttusr"].as<const char*>();
+  html += "\"> </div>";
+  html += "<div class=\"row\"> <label for=\"mqttpass\">Password (optional)</label> <input type=\"password\" id=\"mqttpass\" name=\"mqttpass\" value=\"";
+  html += json["mqttpass"].as<const char*>();
+  html += "\"> </div>";
+  html += "<h2>Button settings</h2> <p>Assign MQTT Topic and Payload for each button, for example:<br>Topic: \"homeassistant/sensor/hugo_[id]/state\"<br>Payload: \"1\"<br>";
+  html += "Use shortcode <strong>[id]</strong> to add 6-character unique identifier. This is especially useful if you have more Hugos and want to distinguish between them.<br></p>";
   html += "<div class=\"row\"> <label for=\"b1t\">Button 1 Topic</label> <input type=\"text\" id=\"b1t\" name=\"b1t\" value=\"";
   html += json["b1t"].as<const char*>();
   html += "\"> </div> <div class=\"row\"> <label for=\"b1p\">Button 1 Payload</label> <input type=\"text\" id=\"b1p\" name=\"b1p\" value=\"";
@@ -180,18 +196,23 @@ void handleRoot() {
   html += "<h2>Button combinations</h2><p>Push two neighbouring buttons together and have them act as a virtual button.</p>";
   html += "<div class=\"row\"><label for=\"b5t\">B1+B2 Topic</label> <input type=\"text\" id=\"b5t\" name=\"b5t\" value=\"";
   html += json["b5t"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b5p\">B1+B2 Payload</label> <input type=\"text\" id=\"b5p\" name=\"b5p\" value=\"";
+  html += "\"></div> <div class=\"row\"> <label for=\"b5p\">B1+B2 Payload</label> <input type=\"text\" id=\"b5p\" name=\"b5p\" value=\"";
   html += json["b5p"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b6t\">B2+B3 Topic</label> <input type=\"text\" id=\"b6t\" name=\"b6t\" value=\"";
+  html += "\"></div> <div class=\"row\"> <label for=\"b6t\">B2+B3 Topic</label> <input type=\"text\" id=\"b6t\" name=\"b6t\" value=\"";
   html += json["b6t"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b6p\">B2+B3 Payload</label> <input type=\"text\" id=\"b6p\" name=\"b6p\" value=\"";
+  html += "\"></div> <div class=\"row\"> <label for=\"b6p\">B2+B3 Payload</label> <input type=\"text\" id=\"b6p\" name=\"b6p\" value=\"";
   html += json["b6p"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b7t\">B3+B4 Topic</label> <input type=\"text\" id=\"b7t\" name=\"b7t\" value=\"";
+  html += "\"></div> <div class=\"row\"> <label for=\"b7t\">B3+B4 Topic</label> <input type=\"text\" id=\"b7t\" name=\"b7t\" value=\"";
   html += json["b7t"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b7p\">B3+B4 Payload</label> <input type=\"text\" id=\"b7p\" name=\"b7p\" value=\"";
+  html += "\"></div> <div class=\"row\"> <label for=\"b7p\">B3+B4 Payload</label> <input type=\"text\" id=\"b7p\" name=\"b7p\" value=\"";
   html += json["b7p"].as<const char*>();
-  html += "\">";
-  html += "</div> <div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
+  html += "\"></div>";
+  html += "<h2>Battery monitoring</h2><p>You can monitor your battery level percentage (rough estimation).<br>";
+  html += "For example: homeassistant/sensor/hugo_[id]/battery</p>";
+  html += "<div class=\"row\"><label for=\"batt\">Battery Topic</label> <input type=\"text\" id=\"batt\" name=\"batt\" value=\"";
+  html += json["batt"].as<const char*>();
+  html += "\"></div>";
+  html += "<div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
   html += "<div class=\"github\"> <p>MQTT firmware ";
   html += FW_VERSION;
   html += ", check out <a href=\"https://github.com/mcer12/Hugo-ESP8266\" target=\"_blank\"><strong>Hugo</strong> on GitHub</a></p> </div>";

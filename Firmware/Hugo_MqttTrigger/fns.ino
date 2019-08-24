@@ -60,10 +60,10 @@ void mqtt_connect() {
   const char* mqtt_usr = json["mqttusr"].as<const char*>();
   const char* mqtt_pass = json["mqttpass"].as<const char*>();
   int i = 0;
-  while (!client.connected() && i < 50) {
+  while (!client.connected() && i < 100) {
     Serial.println("Attempting MQTT connection...");
     if (mqtt_usr[0] != '\0' && mqtt_pass[0] != '\0') {
-      if (client.connect(String("hugo_" + macLastThreeSegments(mac)).c_str(), mqtt_usr, mqtt_pass)){
+      if (client.connect(String("hugo_" + macLastThreeSegments(mac)).c_str(), mqtt_usr, mqtt_pass)) {
         Serial.println("MQTT connected using credentials.");
         return;
       }
@@ -94,6 +94,7 @@ void publishBatteryLevel() {
   String batTopic = json["batt"].as<String>();
   batTopic.replace("[id]", macLastThreeSegments(mac));
   if (batTopic.length() > 0) {
+    delay(20); // lets give the broker little breath time
     client.publish(batTopic.c_str(), String(batteryPercentage()).c_str());
     Serial.print("Battery percentage: ");
     Serial.print(batteryPercentage());

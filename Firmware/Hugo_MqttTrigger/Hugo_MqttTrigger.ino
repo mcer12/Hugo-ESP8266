@@ -15,7 +15,7 @@
 
   May contain code lines from the PubSubClient examples
 
-  ***
+ ***
 
   MIT License
 
@@ -70,7 +70,7 @@
 #define CONFIG_MODE_LOCAL 3
 #define HASS_REGISTER_MODE 4
 #if MQTT_MAX_PACKET_SIZE < 512  // If the max message size is too small, throw an error at compile time. See PubSubClient.cpp line 359
-  #error "MQTT_MAX_PACKET_SIZE is too small in libraries/PubSubClient/src/PubSubClient.h, increase it to 512"
+#error "MQTT_MAX_PACKET_SIZE is too small in libraries/PubSubClient/src/PubSubClient.h, increase it to 512"
 #endif
 
 uint8_t deviceMode = NORMAL_MODE;
@@ -99,8 +99,7 @@ DynamicJsonDocument json(1024); // config buffer
 
 void setup() {
   Serial.begin(115200);
-
-  Serial.println("starting");
+  Serial.println("");
 
   pinMode(16, OUTPUT);
   pinMode(button1_pin, INPUT);
@@ -112,7 +111,7 @@ void setup() {
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
 
-  delay(10); // This small delay is required for correct button detection
+  delay(20); // This small delay is required for correct button detection
 
   button = readButtons();
   Serial.println(button);
@@ -234,8 +233,6 @@ void loop() {
 
   if (deviceMode == NORMAL_MODE) {
 
-    publishBatteryLevel();
-
     if (button == 1) {
       Serial.println("B1");
       String b1t = json["b1t"].as<String>();
@@ -279,6 +276,8 @@ void loop() {
       publishButtonData(b7t, b7p);
     }
   }
+
+  publishBatteryLevel();
 
   client.loop();
   client.disconnect();

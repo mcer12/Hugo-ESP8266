@@ -48,7 +48,7 @@ NOTE: If the device doesnt show up in available ports, you probably don't have C
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/master/Images/ide_settings.png)
 
 ### B) Arduino OTA
-NOTE: For OTA, you need to first set your wifi credentials in Hugh's config portal.  
+NOTE: For OTA, you need to first set your wifi credentials in Hugo's config portal.  
 1) If you have Arduino IDE open, close it.  
 2) Push buttons 1 and 3 at the same time and hold them until the led starts blinking fast and release. OTA will now be available for 5 minutes.  
 3) Open arduino IDE and in available ports list there should be your remote.  
@@ -64,7 +64,7 @@ The device has built-in battery sensing, using high resistance voltage divider. 
 - Battery protection cuts power at 2.9V, if you drain battery completely.
 
 ## Useful information for making custom sketch
-1) You need to set GPIO16 low at the beginning of setup() if you want to use buttons in your sketch. Otherwise anytime you push any button, Hugh will restart.  
+1) You need to set GPIO16 low at the beginning of setup() if you want to use buttons in your sketch. Otherwise anytime you push any button, Hugo will restart.  
 pinMode(16, OUTPUT);  
 digitalWrite(16, LOW);  
 2) All available ESP8266 GPIOs are used here. You can theoretically use RX, TX and GPIO0 for your own purpose, keep in mind that using RX and GPIO0 will prevent the device from booting up so you need to boot first before connecting anything to these pins. TX should be safe but it's not recommended. If you really need a GPIO, you can solder GPIO5 (connected to status LED).

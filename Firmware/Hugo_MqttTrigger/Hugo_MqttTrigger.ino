@@ -1,13 +1,15 @@
 /*
   Hugo ESP8266
-  basic mqtt firmware by gon
-  based on the BasicUrlTrigger firmware
+  MQTT firmware
 
   For more information and help, head to Hugo's github repository:
   https://github.com/mcer12/Hugo-ESP8266
 
   Do you find Hugo great? Get yourself another one on Tindie:
   https://www.tindie.com/products/nicethings/hugo-esp8266-4-button-wifi-remote/
+
+  Credits to gon for providing his modified version of BasicUrlTrigger firmware
+  which was used as a starting point for this firmware.
 
   Credits to Marius Motea for his great project. His project was the reason to design
   the remote in the first place and firmware sketch was initially based on it.
@@ -111,7 +113,7 @@ void setup() {
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
 
-  delay(20); // This small delay is required for correct button detection
+  delay(50); // This small delay is required for correct button detection
 
   button = readButtons();
   Serial.println(button);

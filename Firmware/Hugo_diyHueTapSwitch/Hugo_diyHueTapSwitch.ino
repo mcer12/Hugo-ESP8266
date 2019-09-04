@@ -3,6 +3,7 @@
   diyHue firmware
 
   This customised sketch made specifically for diyHue project.
+  https://github.com/diyhue/diyHue
 
   For more information and help, head to Hugo's github repository:
   https://github.com/mcer12/Hugo-ESP8266
@@ -91,7 +92,8 @@ ESP8266WebServer server(80);
 DynamicJsonDocument json(1024); // config buffer
 
 void setup() {
-  Serial.begin(74880);
+  Serial.begin(115200);
+  Serial.println("");
 
   pinMode(16, OUTPUT);
   pinMode(button1_pin, INPUT);

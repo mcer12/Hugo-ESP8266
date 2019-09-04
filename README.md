@@ -23,4 +23,9 @@ diyHue github: https://github.com/diyhue/diyHue
 
 # Wiki
 From now on you will find full documentation on this project's Wiki page.  
-https://github.com/mcer12/Hugo-ESP8266/wiki
+* [Flashing & FW update](https://github.com/mcer12/Hugo-ESP8266/wiki/Flashing-&-FW-update)
+* [Sketch: DiyHue](https://github.com/mcer12/Hugo-ESP8266/wiki/Sketch:-DiyHue)
+* [Sketch: HTTP (Basic URL)](https://github.com/mcer12/Hugo-ESP8266/wiki/Sketch:-HTTP-(Basic-URL))
+* [Sketch: MQTT](https://github.com/mcer12/Hugo-ESP8266/wiki/Sketch:-MQTT)
+* [Battery management](https://github.com/mcer12/Hugo-ESP8266/wiki/Battery-management)
+* [Tips & Making custom sketch](https://github.com/mcer12/Hugo-ESP8266/wiki/Tips-&-Making-custom-sketch)

@@ -60,7 +60,7 @@ void mqtt_connect() {
   const char* mqtt_usr = json["mqttusr"].as<const char*>();
   const char* mqtt_pass = json["mqttpass"].as<const char*>();
   int i = 0;
-  while (!client.connected() && i < 100) {
+  while (!client.connected() && i < 5) { // Try 5 times, then give up and go to sleep.
     Serial.println("Attempting MQTT connection...");
     if (mqtt_usr[0] != '\0' && mqtt_pass[0] != '\0') {
       if (client.connect(String("hugo_" + macLastThreeSegments(mac)).c_str(), mqtt_usr, mqtt_pass)) {
@@ -73,11 +73,11 @@ void mqtt_connect() {
         return;
       }
     }
+    Serial.print("MQTT connection attempt failed, rc=");
+    Serial.println(client.state());
     ++i;
     delay(10);
   }
-  Serial.print("MQTT connection attempt failed, rc=");
-  Serial.println(client.state());
   goToSleep();
 }
 

@@ -113,7 +113,7 @@ void setup() {
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
 
-  delay(50); // This small delay is required for correct button detection
+  delay(20); // This small delay is required for correct button detection
 
   button = readButtons();
   Serial.println(button);
@@ -149,20 +149,20 @@ void setup() {
     //serializeJson(json, Serial);
 
     WiFi.begin(ssid, pass);
+    WiFi.macAddress(mac);
 
+/*
     int iterator = 0;
-
     while (WiFi.status() != WL_CONNECTED) {
       iterator++;
-      if (iterator > 400) { // 4s timeout
+      if (iterator > 40) { // 4s timeout
         deviceMode = CONFIG_MODE;
         Serial.print("Failed to connect to: ");
         Serial.println(ssid);
         break;
       }
-      delay(10);
+      delay(100);
     }
-
     Serial.println("Wifi connected...");
     Serial.print("SSID: ");
     Serial.println(WiFi.SSID());
@@ -170,14 +170,36 @@ void setup() {
     Serial.println(WiFi.macAddress());
     Serial.print("IP: ");
     Serial.println(WiFi.localIP());
+*/
 
-    WiFi.macAddress(mac);
+
+        for (int i = 0; i < 50; i++) {
+          if (WiFi.status() != WL_CONNECTED) {
+            if (i > 40) {
+              deviceMode = CONFIG_MODE;
+              Serial.print("Failed to connect to: ");
+              Serial.println(ssid);
+              break;
+            }
+            delay(100);
+          } else {
+            Serial.println("Wifi connected...");
+            Serial.print("SSID: ");
+            Serial.println(WiFi.SSID());
+            Serial.print("Mac address: ");
+            Serial.println(WiFi.macAddress());
+            Serial.print("IP: ");
+            Serial.println(WiFi.localIP());
+            break;
+          }
+        }
 
     // MQTT SETUP
-    if (broker[0] != '\0' || port != 0) {
+    if (broker[0] != '\0' && port != 0) {
       client.setServer(broker, port);
     } else {
-      Serial.println("Broker IP or port is not set. Check your configuration.");
+      deviceMode = CONFIG_MODE;
+      Serial.println("Broker address or port is not set, going to config mode.");
     }
 
   } else {

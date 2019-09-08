@@ -135,28 +135,29 @@ void setup() {
     //serializeJson(json, Serial);
 
     WiFi.begin(ssid, pass);
+    WiFi.macAddress(mac);
 
-    int iterator = 0;
-    while (WiFi.status() != WL_CONNECTED) {
-      iterator++;
-      if (iterator > 400) { // 4s timeout
-        deviceMode = CONFIG_MODE;
-        Serial.print("Failed to connect to: ");
-        Serial.println(ssid);
+    for (int i = 0; i < 50; i++) {
+      if (WiFi.status() != WL_CONNECTED) {
+        if (i > 40) {
+          deviceMode = CONFIG_MODE;
+          Serial.print("Failed to connect to: ");
+          Serial.println(ssid);
+          break;
+        }
+        delay(100);
+      } else {
+        Serial.println("Wifi connected...");
+        Serial.print("SSID: ");
+        Serial.println(WiFi.SSID());
+        Serial.print("Mac address: ");
+        Serial.println(WiFi.macAddress());
+        Serial.print("IP: ");
+        Serial.println(WiFi.localIP());
         break;
       }
-      delay(10);
     }
-    /*
-      Serial.println("Wifi connected...");
-      Serial.print("SSID: ");
-      Serial.println(WiFi.SSID());
-      Serial.print("Mac address: ");
-      Serial.println(WiFi.macAddress());
-      Serial.print("IP: ");
-      Serial.println(WiFi.localIP());
-    */
-    WiFi.macAddress(mac);
+    
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("No credentials set, go to config mode");

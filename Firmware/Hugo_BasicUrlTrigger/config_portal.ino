@@ -1,7 +1,7 @@
 
 void startConfigPortal() {
   startBlinking(CONFIG_BLINK_SPEED);
-  WiFi.disconnect(true);
+  WiFi.disconnect();
   WiFi.mode(WIFI_AP);
   IPAddress ap_ip(10, 10, 10, 1);
   WiFi.softAPConfig(ap_ip, ap_ip, IPAddress(255, 255, 255, 0));

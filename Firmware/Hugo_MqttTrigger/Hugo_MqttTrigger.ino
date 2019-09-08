@@ -151,48 +151,26 @@ void setup() {
     WiFi.begin(ssid, pass);
     WiFi.macAddress(mac);
 
-/*
-    int iterator = 0;
-    while (WiFi.status() != WL_CONNECTED) {
-      iterator++;
-      if (iterator > 40) { // 4s timeout
-        deviceMode = CONFIG_MODE;
-        Serial.print("Failed to connect to: ");
-        Serial.println(ssid);
+    for (int i = 0; i < 50; i++) {
+      if (WiFi.status() != WL_CONNECTED) {
+        if (i > 40) {
+          deviceMode = CONFIG_MODE;
+          Serial.print("Failed to connect to: ");
+          Serial.println(ssid);
+          break;
+        }
+        delay(100);
+      } else {
+        Serial.println("Wifi connected...");
+        Serial.print("SSID: ");
+        Serial.println(WiFi.SSID());
+        Serial.print("Mac address: ");
+        Serial.println(WiFi.macAddress());
+        Serial.print("IP: ");
+        Serial.println(WiFi.localIP());
         break;
       }
-      delay(100);
     }
-    Serial.println("Wifi connected...");
-    Serial.print("SSID: ");
-    Serial.println(WiFi.SSID());
-    Serial.print("Mac address: ");
-    Serial.println(WiFi.macAddress());
-    Serial.print("IP: ");
-    Serial.println(WiFi.localIP());
-*/
-
-
-        for (int i = 0; i < 50; i++) {
-          if (WiFi.status() != WL_CONNECTED) {
-            if (i > 40) {
-              deviceMode = CONFIG_MODE;
-              Serial.print("Failed to connect to: ");
-              Serial.println(ssid);
-              break;
-            }
-            delay(100);
-          } else {
-            Serial.println("Wifi connected...");
-            Serial.print("SSID: ");
-            Serial.println(WiFi.SSID());
-            Serial.print("Mac address: ");
-            Serial.println(WiFi.macAddress());
-            Serial.print("IP: ");
-            Serial.println(WiFi.localIP());
-            break;
-          }
-        }
 
     // MQTT SETUP
     if (broker[0] != '\0' && port != 0) {

@@ -118,7 +118,7 @@ void handleRoot() {
   html += json["b5"].as<const char*>();
   html += "\"> </div> <div class=\"row\"> <label for=\"b6\">B2+B3 url</label> <input type=\"text\" id=\"b6\" name=\"b6\" value=\"";
   html += json["b6"].as<const char*>();
-  html += "\"> </div> <div class=\"row\"> <label for=\"b7\">B4+B5 url</label> <input type=\"text\" id=\"b7\" name=\"b7\" value=\"";
+  html += "\"> </div> <div class=\"row\"> <label for=\"b7\">B3+B4 url</label> <input type=\"text\" id=\"b7\" name=\"b7\" value=\"";
   html += json["b7"].as<const char*>();
   html += "\"> </div>";
   html += "<div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";

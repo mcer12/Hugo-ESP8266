@@ -15,7 +15,7 @@ void stopBlinking() {
 }
 
 void goToSleep() {
-  Serial.println("going to sleep"); 
+  Serial.println("going to sleep");
 
   yield();
   delay(5);
@@ -26,41 +26,53 @@ void goToSleep() {
 String macToStr(const uint8_t* mac) {
   String result;
   for (int i = 0; i < 6; ++i) {
+    if (mac[i] < 0x10) result += "0";
     result += String(mac[i], 16);
     if (i < 5)
       result += ':';
   }
+  result.toUpperCase();
   return result;
 }
 
 String macLastThreeSegments(const uint8_t* mac) {
   String result;
-  for (int i = 2; i < 6; ++i) {
-    result += String(mac[i], 16);
+  for (int i = 3; i < 6; ++i) {
+    if (mac[i] < 0x10) result += "0";
+    result += String(mac[i], HEX);
   }
+  result.toUpperCase();
   return result;
 }
 
 void sendHttpRequest(String buttonUrl) {
   int batteryPercent = batteryPercentage();
   if (batteryPercent > 100) batteryPercent = 100;
-  
+
   buttonUrl.replace("[blvl]", (String)batteryPercent);
   buttonUrl.replace("[mac]", macToStr(mac));
-  
+
   if (buttonUrl.length() == 0 || buttonUrl == "null" || buttonUrl == NULL) {
     Serial.println("Button URL is not defined. Set it in config portal.");
     return;
   }
+
   HTTPClient http;
-  http.begin(buttonUrl);
+  
+  if (buttonUrl.indexOf("https:") >= 0) {
+    std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+    client->setInsecure();
+    http.begin(*client, buttonUrl);
+  } else {
+    http.begin(buttonUrl);
+  }
 
   int httpCode = http.GET();
 
   if (httpCode > 0) {
-    Serial.print("Successful request to URL: ");
+    Serial.print("Request sucess, URL: ");
   } else {
-    Serial.print("Error connecting to URL: ");
+    Serial.print("Request failed, URL: ");
   }
   http.end();   //Close connection
   Serial.println(buttonUrl);

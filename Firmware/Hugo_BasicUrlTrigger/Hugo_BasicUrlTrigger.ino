@@ -44,6 +44,7 @@
 
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
+#include <WiFiClientSecureBearSSL.h>
 #include <WiFiClient.h>
 #include <ESP8266mDNS.h>
 #include <ESP8266WebServer.h>
@@ -52,8 +53,9 @@
 #include <ArduinoOTA.h>
 #include <Ticker.h>
 
-#define OTA_NAME "Hugo"
-#define AP_NAME "HugoConfig"
+#define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
+#define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
+#define FW_VERSION "1.4-beta"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -69,12 +71,15 @@
 
 uint8_t deviceMode = NORMAL_MODE;
 
-int button;
+uint8_t button;
 
 int buttonTreshold = 2000;
 
 // BUTTONS TOGGLES
-bool button1toggled = false, button2toggled = false, button3toggled = false, button4toggled = false;
+bool button1toggled = false,
+     button2toggled = false,
+     button3toggled = false,
+     button4toggled = false;
 bool otaModeStarted = false;
 volatile bool ledState = false;
 
@@ -112,6 +117,7 @@ void setup() {
     Serial.println("Failed to mount file system");
   }
 
+  WiFi.macAddress(mac);
   readConfig();
 
   const char* ssid = json["ssid"].as<const char*>();
@@ -135,7 +141,6 @@ void setup() {
     //serializeJson(json, Serial);
 
     WiFi.begin(ssid, pass);
-    WiFi.macAddress(mac);
 
     for (int i = 0; i < 50; i++) {
       if (WiFi.status() != WL_CONNECTED) {
@@ -157,7 +162,7 @@ void setup() {
         break;
       }
     }
-    
+
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("No credentials set, go to config mode");
@@ -168,7 +173,7 @@ void setup() {
   rst_info *rinfo;
   rinfo = ESP.getResetInfoPtr();
 
-  String ota_name = "Hugo_" + macLastThreeSegments(mac);
+  String ota_name = OTA_NAME + macLastThreeSegments(mac);
   ArduinoOTA.setHostname(ota_name.c_str());
   ArduinoOTA.begin();
 

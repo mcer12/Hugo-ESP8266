@@ -1,7 +1,7 @@
 # Hugo-ESP8266
 
 Welcome to official git rep for Hugo, universal wifi remote.  
-![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/develop/Images/hugh.jpg)
+![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/master/Images/hugo_numbered.png)
 
 ## UPDATES
 **RELEASE 1.3 MQTT (24/8/2019)**:  

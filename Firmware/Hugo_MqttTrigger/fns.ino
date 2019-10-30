@@ -41,18 +41,22 @@ void goToSleep() {
 String macToStr(const uint8_t* mac) {
   String result;
   for (int i = 0; i < 6; ++i) {
+    if (mac[i] < 0x10) result += "0";
     result += String(mac[i], 16);
     if (i < 5)
       result += ':';
   }
+  result.toUpperCase();
   return result;
 }
 
 String macLastThreeSegments(const uint8_t* mac) {
   String result;
   for (int i = 3; i < 6; ++i) {
+    if (mac[i] < 0x10) result += "0";
     result += String(mac[i], HEX);
   }
+  result.toUpperCase();
   return result;
 }
 

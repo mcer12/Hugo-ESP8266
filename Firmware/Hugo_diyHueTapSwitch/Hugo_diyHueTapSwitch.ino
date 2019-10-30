@@ -53,8 +53,9 @@
 #include <ArduinoOTA.h>
 #include <Ticker.h>
 
-#define OTA_NAME "Hugo"
-#define AP_NAME "HugoConfig"
+#define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
+#define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
+#define FW_VERSION "1.3.1"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -113,6 +114,7 @@ void setup() {
     Serial.println("Failed to mount file system");
   }
 
+  WiFi.macAddress(mac);
   readConfig();
 
   const char* ssid = json["ssid"].as<const char*>();
@@ -159,7 +161,6 @@ void setup() {
         Serial.print("IP: ");
         Serial.println(WiFi.localIP());
     */
-    WiFi.macAddress(mac);
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("No credentials set, go to config mode");
@@ -170,7 +171,7 @@ void setup() {
   rst_info *rinfo;
   rinfo = ESP.getResetInfoPtr();
 
-  String ota_name = "Hugo_" + macLastThreeSegments(mac);
+  String ota_name = OTA_NAME + macLastThreeSegments(mac);
   ArduinoOTA.setHostname(ota_name.c_str());
   ArduinoOTA.begin();
 

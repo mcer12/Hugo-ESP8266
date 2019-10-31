@@ -14,6 +14,12 @@ void stopBlinking() {
   digitalWrite(5, LOW);
 }
 
+void blinkOnce(int blinkTime) {
+  digitalWrite(5, HIGH);
+  delay(blinkTime);
+  digitalWrite(5, LOW);
+}
+
 void goToSleep() {
   Serial.println("going to sleep");
 
@@ -58,7 +64,7 @@ void sendHttpRequest(String buttonUrl) {
   }
 
   HTTPClient http;
-  
+
   if (buttonUrl.indexOf("https:") >= 0) {
     std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
     client->setInsecure();
@@ -139,9 +145,8 @@ uint8_t batteryPercentage() {
 bool readConfig() {
   File stateFile = SPIFFS.open("/config.json", "r");
   if (!stateFile) {
-    Serial.println("Failed to read config file... first run?");
-    Serial.println("Creating file and going to sleep. Try again!");
-    json["ssid"] = json["pass"] = json["ip"] = json["gw"] = json["sn"] = json["b1"] = json["b2"] = json["b3"] = json["b4"] = json["b5"] = json["b6"] = json["b7"] = "";
+    Serial.println("Creating config file and going to sleep. Try again!");
+    json["id"] = json["pw"] = json["ip"] = json["gw"] = json["sn"] = json["b1"] = json["b2"] = json["b3"] = json["b4"] = json["b5"] = json["b6"] = json["b7"] = "";
     saveConfig();
     goToSleep();
     return false;

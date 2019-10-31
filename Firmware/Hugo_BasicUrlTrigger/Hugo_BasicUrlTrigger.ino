@@ -55,7 +55,7 @@
 
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.4-beta"
+#define FW_VERSION "1.4-beta2"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -73,20 +73,12 @@ uint8_t deviceMode = NORMAL_MODE;
 
 uint8_t button;
 
-int buttonTreshold = 2000;
-
-// BUTTONS TOGGLES
-bool button1toggled = false,
-     button2toggled = false,
-     button3toggled = false,
-     button4toggled = false;
 bool otaModeStarted = false;
 volatile bool ledState = false;
 
 // TIMERS
-unsigned long otaMillis, sleepMillis, ledMillis, configTimer, otaTimer;
+unsigned long otaMillis, ledMillis, configTimer, otaTimer;
 
-int counter;
 byte mac[6];
 
 Ticker ticker;
@@ -120,8 +112,8 @@ void setup() {
   WiFi.macAddress(mac);
   readConfig();
 
-  const char* ssid = json["ssid"].as<const char*>();
-  const char* pass = json["pass"].as<const char*>();
+  const char* ssid = json["id"].as<const char*>();
+  const char* pass = json["pw"].as<const char*>();
   const char* ip = json["ip"].as<const char*>();
   const char* gw = json["gw"].as<const char*>();
   const char* sn = json["sn"].as<const char*>();
@@ -165,7 +157,7 @@ void setup() {
 
   } else {
     deviceMode = CONFIG_MODE;
-    Serial.println("No credentials set, go to config mode");
+    Serial.println("No credentials set, going to config mode");
     //startConfigPortal();
     //goToSleep();
   }
@@ -195,7 +187,7 @@ void loop() {
   }
 
   if (deviceMode == CONFIG_MODE) {
-    Serial.println("STARTING CONFIG ACCESS POINT, PRESS ANY BUTTON TO EXIT...");
+    Serial.println("STARTING CONFIG ACCESS POINT...");
     startConfigPortal();
     Serial.println("RETURNING TO NORMAL MODE...");
     return;
@@ -207,40 +199,33 @@ void loop() {
 
   if (deviceMode != NORMAL_MODE) return;
 
+  Serial.print("B");
+  Serial.println(button);
+
   if (button == 1) {
-    Serial.println("B1");
     sendHttpRequest(json["b1"].as<String>());
   }
   else if (button == 2) {
-    Serial.println("B2");
     sendHttpRequest(json["b2"].as<String>());
   }
   else if (button == 3) {
-    Serial.println("B3");
     sendHttpRequest(json["b3"].as<String>());
   }
   else if (button == 4) {
-    Serial.println("B4");
     sendHttpRequest(json["b4"].as<String>());
   }
   else if (button == 5) {
-    Serial.println("B5 (B1+B2 combo)");
     sendHttpRequest(json["b5"].as<String>());
   }
   else if (button == 6) {
-    Serial.println("B6 (B2+B3 combo)");
     sendHttpRequest(json["b6"].as<String>());
   }
   else if (button == 7) {
-    Serial.println("B7 (B3+B4 combo)");
     sendHttpRequest(json["b7"].as<String>());
   }
-  digitalWrite(5, HIGH);
-  delay(20);
-  digitalWrite(5, LOW);
+  
+  blinkOnce(20);
 
-  //if (millis() - sleepMillis >= sleepDelay) {
   goToSleep();
-  //}
 
 }

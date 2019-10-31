@@ -4,7 +4,7 @@ void startOTA() {
   delay(3000);
   
   while (millis() - otaTimer < OTA_TIMEOUT) {
-    if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH) {
+    if (readButtons() > 0) {
       stopBlinking();
       goToSleep();
       return;

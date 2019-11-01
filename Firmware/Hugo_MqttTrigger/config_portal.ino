@@ -1,7 +1,8 @@
 
 void startConfigPortal() {
   startBlinking(CONFIG_BLINK_SPEED);
-  WiFi.disconnect();
+  
+.disconnect();
   WiFi.mode(WIFI_AP);
   IPAddress ap_ip(10, 10, 10, 1);
   WiFi.softAPConfig(ap_ip, ap_ip, IPAddress(255, 255, 255, 0));
@@ -166,7 +167,7 @@ void handleRoot() {
   html += "<h2>MQTT Configuration</h2>";
   html += "<p>Set your broker address as an IP or name address.<br>For example: \"broker.example.com\" or \"192.168.0.1\"</p>";
   html += "<p>You can also define user and password for more security.<br></p>";
-  html += "<div class=\"row\"> <label for=\"broker\">Broker adress</label> <input type=\"text\" id=\"broker\" name=\"broker\" value=\"";
+  html += "<div class=\"row\"> <label for=\"broker\">Broker address</label> <input type=\"text\" id=\"broker\" name=\"broker\" value=\"";
   html += json["broker"].as<const char*>();
   html += "\"> </div>";
   html += "<div class=\"row\"> <label for=\"port\">Broker port</label> <input type=\"text\" id=\"port\" name=\"port\" value=\"";

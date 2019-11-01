@@ -116,7 +116,7 @@ void handleRoot() {
   html += "<div class=\"bat\"><p>Battery level: " + ((batteryPercent > 100) ? "Charging" : (String)batteryPercent + "%") + "</p><div><div style=\"background: " + batteryColor + ";width: " + ((batteryPercent > 100) ? 100 : batteryPercent) + "%\"></div></div></div>";
   html += "<div class=\"c\"><form method=\"post\" action=\"/\"><h1>Hugo Configuration</h1><p>Press any of the Hugo's buttons to shut down config AP and resume normal function.</p><h2>Network settings</h2><p>Select your network settings here.</p><div class=\"r\"><label for=\"id\">WiFi SSID</label><input type=\"text\" id=\"id\" name=\"id\" value=\"";
   html += json["id"].as<const char*>();
-  html += "\"></div><div class=\"r\"><label for=\"pw\">WIFI Password</label><input type=\"password\" id=\"pw\" name=\"pw\" value=\"";
+  html += "\"></div><div class=\"r\"><label for=\"pw\">WiFi Password</label><input type=\"password\" id=\"pw\" name=\"pw\" value=\"";
   html += json["pw"].as<const char*>();
   html += "\"></div><h2>Static IP settings (optional)</h2><p>In some cases this might speed up response time. All 3 need to be set and IP should be reserved in router's DHCP settings.";
   html += "<br>MAC address: <span class=\"mac\">";

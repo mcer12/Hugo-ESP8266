@@ -56,7 +56,7 @@
 
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.3.1"
+#define FW_VERSION "1.4"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -121,7 +121,7 @@ void setup() {
   if (!SPIFFS.begin()) {
     Serial.println("Failed to mount file system");
   }
-
+  
   WiFi.macAddress(mac);
   readConfig();
 
@@ -135,8 +135,8 @@ void setup() {
   int port = json["port"].as<int>();
 
   if (ssid[0] != '\0' && pass[0] != '\0') {
-    WiFi.mode(WIFI_STA);
     Serial.println("setting up wifi");
+    WiFi.mode(WIFI_STA);
 
     if (ip[0] != '\0' && gw[0] != '\0' && sn[0] != '\0') {
       IPAddress ip_address, gateway_ip, subnet_mask;

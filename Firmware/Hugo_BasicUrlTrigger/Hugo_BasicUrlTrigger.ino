@@ -55,7 +55,7 @@
 
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.4"
+#define FW_VERSION "1.4.1"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -84,7 +84,7 @@ byte mac[6];
 Ticker ticker;
 ESP8266WebServer server(80);
 
-DynamicJsonDocument json(1024); // config buffer
+DynamicJsonDocument json(2048); // config buffer
 
 void setup() {
   Serial.begin(115200);

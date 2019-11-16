@@ -6,6 +6,9 @@ This is an official repository of Hugo, ESP8266 4-button remote.
 
 ## UPDATES
 
+**RELEASE 1.4.1 bugfix (16/11/2019)**
+- Fixes an issue with input values not being saved in config portal 
+
 **RELEASE 1.4 (3/11/2019)**
 - All sketches: Config AP name change
 - MQTT Sketch: Battery is now automatically registered in Home Assistant  

@@ -19,7 +19,7 @@ void sendConfig(StaticJsonDocument<512>& payload, String configTopic) {
   char output[512];
   serializeJson(payload, output);
   Serial.println(output);
-  if (client.publish(configTopic.c_str(), output)) {
+  if (client.publish(configTopic.c_str(), output, true)) {
     Serial.print("Discovery data sent.");
   } else {
     Serial.print("Failed to send discovery data, error = ");

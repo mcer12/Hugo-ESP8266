@@ -1,6 +1,6 @@
 # Hugo-ESP8266
 
-This is an official repository of Hugo, ESP8266 4-button remote. 
+Hugo is a 4-button ESP8266 Wi-Fi Remote, Arduino compatible and simple to use.
 
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/master/Images/hugo_numbered.png)
 

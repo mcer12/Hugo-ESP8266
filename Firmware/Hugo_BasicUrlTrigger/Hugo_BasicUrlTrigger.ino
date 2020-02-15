@@ -55,7 +55,7 @@
 
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.4.1"
+#define FW_VERSION "1.4.2"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12

@@ -63,13 +63,15 @@ void sendHttpRequest(String buttonUrl) {
     return;
   }
 
+  std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
   HTTPClient http;
 
   if (buttonUrl.indexOf("https:") >= 0) {
-    std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+    Serial.print("SSL mode...");
     client->setInsecure();
     http.begin(*client, buttonUrl);
   } else {
+    Serial.print("HTTP mode...");
     http.begin(buttonUrl);
   }
 

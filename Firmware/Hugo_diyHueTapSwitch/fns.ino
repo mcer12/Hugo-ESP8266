@@ -68,7 +68,7 @@ void sendHttpRequest(int requestCode) {
   int batteryPercent = batteryPercentage();
   if (batteryPercent > 100) batteryPercent = 100;
   WiFiClient client;
-  String url = "/switch?mac=" + macToStr(mac) + "&button=" + requestCode + "&b_level=" + batteryPercent;
+  String url = "/switch?mac=" + macToStr(mac) + "&button=" + requestCode + "&battery=" + batteryPercent;
   client.connect(bridgeIp, 80);
   client.print(String("GET ") + url + " HTTP/1.1\r\n" +
                "Host: " + bridgeIp + "\r\n" +
@@ -110,7 +110,7 @@ int ReadAIN()
 /* Battery percentage estimation, this is not very accurate but close enough */
 uint8_t batteryPercentage() {
   int analogValue = ReadAIN();
-  if (analogValue > 1000) return 200; // CHARGING
+  //if (analogValue > 1000) return 200; // CHARGING
   if (analogValue > 960) return 100;
   if (analogValue > 940) return 90;
   if (analogValue > 931) return 80;

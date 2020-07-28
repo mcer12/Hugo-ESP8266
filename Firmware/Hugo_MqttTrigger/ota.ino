@@ -1,3 +1,24 @@
+void setupOTA() {
+  String ota_name = OTA_NAME + macLastThreeSegments(mac);
+  ArduinoOTA.setHostname(ota_name.c_str());
+  ArduinoOTA.begin();
+
+  ArduinoOTA.onStart([]() {
+    Serial.println("OTA UPLOAD STARTED...");
+    stopBlinking();
+    digitalWrite(5, HIGH);
+  });
+
+  ArduinoOTA.onError([](ota_error_t error) {
+    (void)error;
+    ESP.restart();
+  });
+
+  ArduinoOTA.onEnd([]() {
+    Serial.println("OTA UPLOAD DONE...");
+  });
+}
+
 void startOTA() {
   startBlinking(OTA_BLINK_SPEED);
   delay(5000);

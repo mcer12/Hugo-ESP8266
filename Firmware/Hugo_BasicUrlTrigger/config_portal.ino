@@ -106,7 +106,7 @@ void handleRoot() {
   }
 
   const char* batteryColor = "#a53e3e"; // default RED
-  int batteryPercent = batteryPercentage();
+  int batteryPercent = batteryPercentage;
   if (batteryPercent >= 40) batteryColor = "#a57d3e";
   if (batteryPercent >= 60) batteryColor = "#9ea53e";
   if (batteryPercent >= 80) batteryColor = "#7ca53e";
@@ -148,7 +148,9 @@ void handleRoot() {
   html += json["b7"].as<const char*>();
   html += "\"></div>";
   html += "<div class=\"r\"><button type=\"submit\">Save and reboot</button></div></form></div>";
-  html += "<div class=\"github\"><p>MQTT firmware ";
+  html += "<div class=\"github\"><p>";
+  html += SKETCH;
+  html += " ";
   html += FW_VERSION;
   html += ", check out <a href=\"https://git.io/Jezc2\" target=\"_blank\"><strong>Hugo</strong> on GitHub</a></p></div>";
   html += "</div></body></html>";

@@ -9,9 +9,26 @@ void startBlinking(int blinkingSpeed) {
   ticker.attach_ms(blinkingSpeed, toggleLed, blinkingSpeed);
 }
 
+void blinkLed(int time_ms) {
+  digitalWrite(5, HIGH);
+  delay(time_ms);
+  digitalWrite(5, LOW);
+}
+
 void stopBlinking() {
   ticker.detach();
   digitalWrite(5, LOW);
+}
+
+void lowBatteryAlert() {
+  for (int i = 0; i < 6; i++ ) {
+    if (i % 2 == 0) {
+      digitalWrite(5, HIGH);
+    } else {
+      digitalWrite(5, LOW);
+    }
+    if (i < 5) delay(200);
+  }
 }
 
 void goToSleep() {
@@ -99,9 +116,9 @@ void publishBatteryLevel() {
   batTopic.replace("[id]", macLastThreeSegments(mac));
   if (batTopic.length() > 0) {
     delay(20); // lets give the broker little breath time
-    client.publish(batTopic.c_str(), String(batteryPercentage()).c_str());
+    client.publish(batTopic.c_str(), String(batteryPercentage).c_str());
     Serial.print("Battery percentage: ");
-    Serial.print(batteryPercentage());
+    Serial.print(batteryPercentage);
     Serial.println("%");
   }
 }
@@ -147,7 +164,7 @@ int ReadAIN()
 }
 
 /* Battery percentage estimation, this is not very accurate but close enough */
-uint8_t batteryPercentage() {
+uint8_t getBatteryPercentage() {
   int analogValue = ReadAIN();
   if (analogValue > 1000) return 101; // CHARGING
   if (analogValue > 960) return 100;

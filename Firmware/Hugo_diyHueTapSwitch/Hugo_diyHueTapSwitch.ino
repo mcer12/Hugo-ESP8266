@@ -55,7 +55,7 @@
 
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.3.2"
+#define FW_VERSION "1.3.3"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -72,6 +72,7 @@
 uint8_t deviceMode = NORMAL_MODE;
 
 int button;
+uint8_t batteryPercentage;
 
 int buttonTreshold = 2000;
 const char* switchType = "ZGPSwitch";
@@ -106,8 +107,9 @@ void setup() {
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
 
-  delay(50); // This small delay is required for correct button detection
+  delay(20); // This small delay is required for correct button detection
 
+  batteryPercentage = getBatteryPercentage();
   button = readButtons();
 
   if (!SPIFFS.begin()) {
@@ -210,25 +212,29 @@ void loop() {
   if (button == 1) {
     Serial.println("B1");
     sendHttpRequest(34);
+    blinkLed(20);
   }
   else if (button == 2) {
     Serial.println("B2");
     sendHttpRequest(16);
+    blinkLed(20);
   }
   else if (button == 3) {
     Serial.println("B3");
     sendHttpRequest(17);
+    blinkLed(20);
   }
   else if (button == 4) {
     Serial.println("B4");
     sendHttpRequest(18);
+    blinkLed(20);
   }
-  digitalWrite(5, HIGH);
-  delay(20);
-  digitalWrite(5, LOW);
+  
+  if (batteryPercentage < 10) {
+    delay(500);
+    lowBatteryAlert();
+  }
 
-  //if (millis() - sleepMillis >= sleepDelay) {
   goToSleep();
-  //}
 
 }

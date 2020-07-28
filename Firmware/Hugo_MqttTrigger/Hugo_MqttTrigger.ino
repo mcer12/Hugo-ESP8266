@@ -54,9 +54,10 @@
 #include <ArduinoOTA.h>
 #include <Ticker.h>
 
+#define SKETCH "MqttTrigger"
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.4.1"
+#define FW_VERSION "1.4.2"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -78,6 +79,7 @@
 uint8_t deviceMode = NORMAL_MODE;
 
 int button;
+uint8_t batteryPercentage;
 
 int buttonTreshold = 2000;
 
@@ -115,13 +117,19 @@ void setup() {
 
   delay(20); // This small delay is required for correct button detection
 
+  batteryPercentage = getBatteryPercentage();
   button = readButtons();
+  
+  Serial.print("FW: ");
+  Serial.println(SKETCH);
+  Serial.print("Button: ");
   Serial.println(button);
+
 
   if (!SPIFFS.begin()) {
     Serial.println("Failed to mount file system");
   }
-  
+
   WiFi.macAddress(mac);
   readConfig();
 
@@ -190,15 +198,7 @@ void setup() {
   rst_info *rinfo;
   rinfo = ESP.getResetInfoPtr();
 
-  String ota_name = OTA_NAME + macLastThreeSegments(mac);
-  ArduinoOTA.setHostname(ota_name.c_str());
-  ArduinoOTA.begin();
-
-  ArduinoOTA.onStart([]() {
-    Serial.println("OTA UPLOAD STARTED...");
-    stopBlinking();
-    digitalWrite(5, HIGH);
-  });
+  setupOTA();
 
 }
 
@@ -240,42 +240,49 @@ void loop() {
       String b1t = json["b1t"].as<String>();
       String b1p = json["b1p"].as<String>();
       publishButtonData(b1t, b1p);
+      blinkLed(20);
     }
     else if (button == 2) {
       Serial.println("B2");
       String b2t = json["b2t"].as<String>();
       String b2p = json["b2p"].as<String>();
       publishButtonData(b2t, b2p);
+      blinkLed(20);
     }
     else if (button == 3) {
       Serial.println("B3");
       String b3t = json["b3t"].as<String>();
       String b3p = json["b3p"].as<String>();
       publishButtonData(b3t, b3p);
+      blinkLed(20);
     }
     else if (button == 4) {
       Serial.println("B4");
       String b4t = json["b4t"].as<String>();
       String b4p = json["b4p"].as<String>();
       publishButtonData(b4t, b4p);
+      blinkLed(20);
     }
     else if (button == 5) {
       Serial.println("B6 (B1+B2 combo)");
       String b5t = json["b5t"].as<String>();
       String b5p = json["b5p"].as<String>();
       publishButtonData(b5t, b5p);
+      blinkLed(20);
     }
     else if (button == 6) {
       Serial.println("B6 (B2+B3 combo)");
       String b6t = json["b6t"].as<String>();
       String b6p = json["b6p"].as<String>();
       publishButtonData(b6t, b6p);
+      blinkLed(20);
     }
     else if (button == 7) {
       Serial.println("B7 (B3+B4 combo)");
       String b7t = json["b7t"].as<String>();
       String b7p = json["b7p"].as<String>();
       publishButtonData(b7t, b7p);
+      blinkLed(20);
     }
   }
 
@@ -285,9 +292,11 @@ void loop() {
   client.disconnect();
 
   if (deviceMode == NORMAL_MODE) {
-    digitalWrite(5, HIGH);
-    delay(20);
-    digitalWrite(5, LOW);
+
+    if (batteryPercentage < 10) {
+      delay(500);
+      lowBatteryAlert();
+    }
 
     goToSleep();
   }

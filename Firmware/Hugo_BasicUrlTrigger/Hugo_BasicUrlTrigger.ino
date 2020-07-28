@@ -53,9 +53,10 @@
 #include <ArduinoOTA.h>
 #include <Ticker.h>
 
+#define SKETCH "BasicUrlTrigger"
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.4.2"
+#define FW_VERSION "1.4.3"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -72,6 +73,7 @@
 uint8_t deviceMode = NORMAL_MODE;
 
 uint8_t button;
+uint8_t batteryPercentage;
 
 bool otaModeStarted = false;
 volatile bool ledState = false;
@@ -100,9 +102,14 @@ void setup() {
   digitalWrite(16, LOW);
   digitalWrite(5, LOW);
 
-  delay(10); // This small delay is required for correct button detection
+  delay(20); // This small delay is required for correct button detection
 
+  batteryPercentage = getBatteryPercentage();
   button = readButtons();
+  
+  Serial.print("FW: ");
+  Serial.println(SKETCH);
+  Serial.print("Button: ");
   Serial.println(button);
 
   if (!SPIFFS.begin()) {
@@ -134,7 +141,7 @@ void setup() {
 
     WiFi.begin(ssid, pass);
 
-    for (int i = 0; i < 50; i++) {
+    for (int i = 0; i < 80; i++) {
       if (WiFi.status() != WL_CONNECTED) {
         if (i > 40) {
           deviceMode = CONFIG_MODE;
@@ -199,32 +206,39 @@ void loop() {
 
   if (deviceMode != NORMAL_MODE) return;
 
-  Serial.print("B");
-  Serial.println(button);
-
   if (button == 1) {
     sendHttpRequest(json["b1"].as<String>());
+    blinkLed(20);
   }
   else if (button == 2) {
     sendHttpRequest(json["b2"].as<String>());
+    blinkLed(20);
   }
   else if (button == 3) {
     sendHttpRequest(json["b3"].as<String>());
+    blinkLed(20);
   }
   else if (button == 4) {
     sendHttpRequest(json["b4"].as<String>());
+    blinkLed(20);
   }
   else if (button == 5) {
     sendHttpRequest(json["b5"].as<String>());
+    blinkLed(20);
   }
   else if (button == 6) {
     sendHttpRequest(json["b6"].as<String>());
+    blinkLed(20);
   }
   else if (button == 7) {
     sendHttpRequest(json["b7"].as<String>());
+    blinkLed(20);
   }
   
-  blinkOnce(20);
+  if (batteryPercentage < 10) {
+    delay(500);
+    lowBatteryAlert();
+  }
 
   goToSleep();
 

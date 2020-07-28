@@ -6,9 +6,7 @@ void toggleRegisterRequest() {
 
       if (i > 100) {
         registerNewRemote();
-        digitalWrite(5, HIGH);
-        delay(1000);
-        digitalWrite(5, LOW);
+        blinkLed(1000);
         goToSleep();
         return;
       }

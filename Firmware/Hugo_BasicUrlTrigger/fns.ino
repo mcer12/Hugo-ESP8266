@@ -9,15 +9,26 @@ void startBlinking(int blinkingSpeed) {
   ticker.attach_ms(blinkingSpeed, toggleLed, blinkingSpeed);
 }
 
+void blinkLed(int time_ms) {
+  digitalWrite(5, HIGH);
+  delay(time_ms);
+  digitalWrite(5, LOW);
+}
+
 void stopBlinking() {
   ticker.detach();
   digitalWrite(5, LOW);
 }
 
-void blinkOnce(int blinkTime) {
-  digitalWrite(5, HIGH);
-  delay(blinkTime);
-  digitalWrite(5, LOW);
+void lowBatteryAlert() {
+  for (int i = 0; i < 6; i++ ) {
+    if (i % 2 == 0) {
+      digitalWrite(5, HIGH);
+    } else {
+      digitalWrite(5, LOW);
+    }
+    if (i < 5) delay(200);
+  }
 }
 
 void goToSleep() {
@@ -52,7 +63,7 @@ String macLastThreeSegments(const uint8_t* mac) {
 }
 
 void sendHttpRequest(String buttonUrl) {
-  int batteryPercent = batteryPercentage();
+  int batteryPercent = batteryPercentage;
   if (batteryPercent > 100) batteryPercent = 100;
 
   buttonUrl.replace("[blvl]", (String)batteryPercent);
@@ -128,7 +139,7 @@ int ReadAIN()
 }
 
 /* Battery percentage estimation, this is not very accurate but close enough */
-uint8_t batteryPercentage() {
+uint8_t getBatteryPercentage() {
   int analogValue = ReadAIN();
   if (analogValue > 1000) return 200; // CHARGING
   if (analogValue > 960) return 100;

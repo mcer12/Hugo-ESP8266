@@ -9,31 +9,34 @@ void startBlinking(int blinkingSpeed) {
   ticker.attach_ms(blinkingSpeed, toggleLed, blinkingSpeed);
 }
 
+void blinkLed(int time_ms) {
+  digitalWrite(5, HIGH);
+  delay(time_ms);
+  digitalWrite(5, LOW);
+}
+
 void stopBlinking() {
   ticker.detach();
   digitalWrite(5, LOW);
 }
 
+void lowBatteryAlert() {
+  for (int i = 0; i < 6; i++ ) {
+    if (i % 2 == 0) {
+      digitalWrite(5, HIGH);
+    } else {
+      digitalWrite(5, LOW);
+    }
+    if (i < 5) delay(200);
+  }
+}
+
 void goToSleep() {
   Serial.println("Going to sleep...");
-  
-  /* 
-   *  This should force all buttons to discharge
-   *  and allow for faster response time 
-  */
-  /*
-  pinMode(button1_pin, OUTPUT);
-  pinMode(button2_pin, OUTPUT);
-  pinMode(button3_pin, OUTPUT);
-  pinMode(button4_pin, OUTPUT);
-  digitalWrite(button1_pin, LOW);
-  digitalWrite(button2_pin, LOW);
-  digitalWrite(button3_pin, LOW);
-  digitalWrite(button4_pin, LOW);
-  */
   yield();
   delay(5);
   ESP.deepSleep(0);
+  delay(100);
   yield();
 }
 
@@ -65,7 +68,7 @@ void sendHttpRequest(int requestCode) {
     Serial.println("diyHue bridge is not specified. Check your configuration.");
     return;
   }
-  int batteryPercent = batteryPercentage();
+  int batteryPercent = batteryPercentage;
   if (batteryPercent > 100) batteryPercent = 100;
   WiFiClient client;
   String url = "/switch?mac=" + macToStr(mac) + "&button=" + requestCode + "&battery=" + batteryPercent;
@@ -108,9 +111,9 @@ int ReadAIN()
 }
 
 /* Battery percentage estimation, this is not very accurate but close enough */
-uint8_t batteryPercentage() {
+uint8_t getBatteryPercentage() {
   int analogValue = ReadAIN();
-  //if (analogValue > 1000) return 200; // CHARGING
+  if (analogValue > 1000) return 200; // CHARGING
   if (analogValue > 960) return 100;
   if (analogValue > 940) return 90;
   if (analogValue > 931) return 80;

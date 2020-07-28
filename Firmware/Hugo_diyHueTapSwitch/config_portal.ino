@@ -67,7 +67,7 @@ void handleRoot() {
   }
 
   const char* batteryColor = "#a53e3e"; // default RED
-  int batteryPercent = batteryPercentage();
+  int batteryPercent = batteryPercentage;
   if (batteryPercent >= 40) batteryColor = "#a57d3e";
   if (batteryPercent >= 60) batteryColor = "#9ea53e";
   if (batteryPercent >= 80) batteryColor = "#7ca53e";

@@ -53,6 +53,7 @@
 #include <ArduinoOTA.h>
 #include <Ticker.h>
 
+#define SKETCH "DiyHueSketch"
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
 #define FW_VERSION "1.3.3"
@@ -112,6 +113,11 @@ void setup() {
   batteryPercentage = getBatteryPercentage();
   button = readButtons();
 
+  Serial.print("FW: ");
+  Serial.println(SKETCH);
+  Serial.print("Button: ");
+  Serial.println(button);
+  
   if (!SPIFFS.begin()) {
     Serial.println("Failed to mount file system");
   }

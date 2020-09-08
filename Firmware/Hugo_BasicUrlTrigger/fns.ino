@@ -86,6 +86,11 @@ void sendHttpRequest(String buttonUrl) {
     http.begin(buttonUrl);
   }
 
+  /*
+  To send http POST requests instead of http GET requests change int httpCode = http.GET(); below to int httpCode = http.POST("");
+  Useful if you want to use Home Assistant webhooks.
+  */
+  
   int httpCode = http.GET();
 
   if (httpCode > 0) {

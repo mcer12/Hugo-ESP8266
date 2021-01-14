@@ -106,11 +106,17 @@ void setup() {
 
   batteryPercentage = getBatteryPercentage();
   button = readButtons();
-  
+
   Serial.print("FW: ");
   Serial.println(SKETCH);
   Serial.print("Button: ");
   Serial.println(button);
+  Serial.print("Battery percentage: ");
+  if (batteryPercentage > 100) {
+    Serial.println("Charging");
+  } else {
+    Serial.println(batteryPercentage);
+  }
 
   if (!SPIFFS.begin()) {
     Serial.println("Failed to mount file system");
@@ -234,7 +240,7 @@ void loop() {
     sendHttpRequest(json["b7"].as<String>());
     blinkLed(20);
   }
-  
+
   if (batteryPercentage < 10) {
     delay(500);
     lowBatteryAlert();

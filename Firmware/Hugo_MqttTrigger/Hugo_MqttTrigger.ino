@@ -119,11 +119,13 @@ void setup() {
 
   batteryPercentage = getBatteryPercentage();
   button = readButtons();
-  
+
   Serial.print("FW: ");
   Serial.println(SKETCH);
   Serial.print("Button: ");
   Serial.println(button);
+  Serial.print("Battery percentage: ");
+  Serial.println(batteryPercentage);
 
 
   if (!SPIFFS.begin()) {

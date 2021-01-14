@@ -146,7 +146,7 @@ int ReadAIN()
 /* Battery percentage estimation, this is not very accurate but close enough */
 uint8_t getBatteryPercentage() {
   int analogValue = ReadAIN();
-  if (analogValue > 1000) return 200; // CHARGING
+  if (analogValue > 1000) return 101; // CHARGING
   if (analogValue > 960) return 100;
   if (analogValue > 940) return 90;
   if (analogValue > 931) return 80;

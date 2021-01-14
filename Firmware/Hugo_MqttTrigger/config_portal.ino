@@ -217,7 +217,9 @@ void handleRoot() {
   html += json["batt"].as<const char*>();
   html += "\"></div>";
   html += "<div class=\"row\"> <button type=\"submit\">Save and reboot</button> </div> </form> </div>";
-  html += "<div class=\"github\"> <p>MQTT firmware ";
+  html += "<div class=\"github\"> <p>";
+  html += SKETCH;
+  html += " ";
   html += FW_VERSION;
   html += ", check out <a href=\"https://github.com/mcer12/Hugo-ESP8266\" target=\"_blank\"><strong>Hugo</strong> on GitHub</a></p> </div>";
   html += "</div> </body> </html>";

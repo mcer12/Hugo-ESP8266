@@ -117,6 +117,12 @@ void setup() {
   Serial.println(SKETCH);
   Serial.print("Button: ");
   Serial.println(button);
+  Serial.print("Battery percentage: ");
+  if (batteryPercentage > 100) {
+    Serial.println("Charging");
+  } else {
+    Serial.println(batteryPercentage);
+  }
   
   if (!SPIFFS.begin()) {
     Serial.println("Failed to mount file system");

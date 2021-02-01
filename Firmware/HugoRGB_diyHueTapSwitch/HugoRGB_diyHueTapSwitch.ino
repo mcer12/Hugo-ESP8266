@@ -116,7 +116,8 @@ void setup() {
   button = readButtons();
 
   if (!SPIFFS.begin()) {
-    Serial.println("Failed to mount file system");
+    Serial.println("Failed to mount file system. Formatting.");
+    SPIFFS.format();
   }
 
   WiFi.macAddress(mac);

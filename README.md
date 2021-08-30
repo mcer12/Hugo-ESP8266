@@ -25,9 +25,6 @@ Hugo is a 4-button ESP8266 Wi-Fi Remote, Arduino compatible and simple to use.
 3D printable case available here:  
 https://www.thingiverse.com/thing:3641618  
 
-Want a ready made Hugo? Get it here:  
-https://www.tindie.com/products/mcer12/hugo-esp8266-4-button-wifi-remote/  
-
 Want to make your own? Head over to Schematic directory for schematic and a list of compontents.
 
 If you use diyHue emulator, just head to Firmwares directory for diyHueTapSwitch sketch!  

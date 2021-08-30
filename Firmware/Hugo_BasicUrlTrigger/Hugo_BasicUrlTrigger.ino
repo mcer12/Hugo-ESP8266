@@ -56,7 +56,7 @@
 #define SKETCH "BasicUrlTrigger"
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.4.3"
+#define FW_VERSION "1.4.4"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -147,32 +147,28 @@ void setup() {
 
     WiFi.begin(ssid, pass);
 
-    for (int i = 0; i < 80; i++) {
-      if (WiFi.status() != WL_CONNECTED) {
-        if (i > 40) {
-          deviceMode = CONFIG_MODE;
-          Serial.print("Failed to connect to: ");
-          Serial.println(ssid);
-          break;
-        }
-        delay(100);
-      } else {
-        Serial.println("Wifi connected...");
-        Serial.print("SSID: ");
-        Serial.println(WiFi.SSID());
-        Serial.print("Mac address: ");
-        Serial.println(WiFi.macAddress());
-        Serial.print("IP: ");
-        Serial.println(WiFi.localIP());
+    int iterator = 0;
+    while (WiFi.status() != WL_CONNECTED) {
+      iterator++;
+      if (iterator > 100) { // 10s timeout
+        deviceMode = CONFIG_MODE;
+        Serial.print("Failed to connect to: ");
+        Serial.println(ssid);
         break;
       }
+      delay(100);
     }
-
+    Serial.println("Wifi connected...");
+    Serial.print("SSID: ");
+    Serial.println(WiFi.SSID());
+    Serial.print("Mac address: ");
+    Serial.println(WiFi.macAddress());
+    WiFi.macAddress(mac);
+    Serial.print("IP: ");
+    Serial.println(WiFi.localIP());
   } else {
     deviceMode = CONFIG_MODE;
-    Serial.println("No credentials set, going to config mode");
-    //startConfigPortal();
-    //goToSleep();
+    Serial.println("No credentials set, go to config mode");
   }
 
   rst_info *rinfo;

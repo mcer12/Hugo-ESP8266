@@ -56,7 +56,7 @@
 #define SKETCH "DiyHueSketch"
 #define OTA_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "Hugo_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.3.3"
+#define FW_VERSION "1.3.4"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -157,13 +157,13 @@ void setup() {
     int iterator = 0;
     while (WiFi.status() != WL_CONNECTED) {
       iterator++;
-      if (iterator > 400) { // 4s timeout
+      if (iterator > 100) { // 10s timeout
         deviceMode = CONFIG_MODE;
         Serial.print("Failed to connect to: ");
         Serial.println(ssid);
         break;
       }
-      delay(10);
+      delay(100);
     }
     /*
         Serial.println("Wifi connected...");

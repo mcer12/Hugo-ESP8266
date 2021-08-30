@@ -56,7 +56,7 @@
 
 #define OTA_NAME "HugoRGB_" // Last 6 MAC address characters will be appended at the end of the OTA name, "Hugo_XXXXXX" by default
 #define AP_NAME "HugoRGB_" // Last 6 MAC address characters will be appended at the end of the AP name, "Hugo_XXXXXX" by default
-#define FW_VERSION "1.0.1"
+#define FW_VERSION "1.0.2"
 #define button1_pin 14
 #define button2_pin 4
 #define button3_pin 12
@@ -143,36 +143,33 @@ void setup() {
     }
 
     //serializeJson(json, Serial);
-
+    Serial.print("Connecting to: ");
+    Serial.println(ssid);
     WiFi.begin(ssid, pass);
 
     int iterator = 0;
     while (WiFi.status() != WL_CONNECTED) {
       iterator++;
-      if (iterator > 400) { // 4s timeout
+      if (iterator > 100) { // 20s timeout
         deviceMode = CONFIG_MODE;
-        Serial.print("Failed to connect to: ");
-        Serial.println(ssid);
+        Serial.print("Wifi connection failed, going to config mode.");
         break;
       }
-      delay(10);
+      delay(100);
     }
-    /*
-        Serial.println("Wifi connected...");
-        Serial.print("SSID: ");
-        Serial.println(WiFi.SSID());
-        Serial.print("Mac address: ");
-        Serial.println(WiFi.macAddress());
-        WiFi.macAddress(mac);
-        Serial.print("IP: ");
-        Serial.println(WiFi.localIP());
-    */
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("No credentials set, go to config mode");
-    //startConfigPortal();
-    //goToSleep();
   }
+
+  Serial.println("Wifi connected...");
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+  Serial.print("Mac address: ");
+  Serial.println(WiFi.macAddress());
+  WiFi.macAddress(mac);
+  Serial.print("IP: ");
+  Serial.println(WiFi.localIP());
 
   rst_info *rinfo;
   rinfo = ESP.getResetInfoPtr();

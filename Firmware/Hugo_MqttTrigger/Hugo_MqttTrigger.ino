@@ -72,9 +72,6 @@
 #define CONFIG_MODE 2
 #define CONFIG_MODE_LOCAL 3
 #define HASS_REGISTER_MODE 4
-#if MQTT_MAX_PACKET_SIZE < 512  // If the max message size is too small, throw an error at compile time. See PubSubClient.cpp line 359
-#error "MQTT_MAX_PACKET_SIZE is too small in libraries/PubSubClient/src/PubSubClient.h, increase it to 512"
-#endif
 
 uint8_t deviceMode = NORMAL_MODE;
 
@@ -187,23 +184,19 @@ void setup() {
 
   // MQTT SETUP
   if (broker[0] != '\0' && port != 0) {
+#if MQTT_MAX_PACKET_SIZE < 512  // If the max message size is too small, throw an error at compile time. See PubSubClient.cpp line 359
+    client.setBufferSize(512);
+#endif
     client.setServer(broker, port);
   } else {
     deviceMode = CONFIG_MODE;
     Serial.println("Broker address or port is not set, going to config mode.");
   }
 
-} else {
-  deviceMode = CONFIG_MODE;
-  Serial.println("No credentials set, going to config mode.");
-  //startConfigPortal();
-  //goToSleep();
-}
+  rst_info *rinfo;
+  rinfo = ESP.getResetInfoPtr();
 
-rst_info *rinfo;
-rinfo = ESP.getResetInfoPtr();
-
-setupOTA();
+  setupOTA();
 
 }
 

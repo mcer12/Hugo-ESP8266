@@ -1,10 +1,29 @@
+void setupOTA() {
+  String ota_name = OTA_NAME + macLastThreeSegments(mac);
+  ArduinoOTA.setHostname(ota_name.c_str());
+  ArduinoOTA.begin();
+
+  ArduinoOTA.onStart([]() {
+    Serial.println("OTA UPLOAD STARTED...");
+    stopBlinking();
+    digitalWrite(5, HIGH);
+  });
+
+  ArduinoOTA.onError([](ota_error_t error) {
+    (void)error;
+    ESP.restart();
+  });
+
+  ArduinoOTA.onEnd([]() {
+    Serial.println("OTA UPLOAD DONE...");
+  });
+}
+
 void startOTA() {
   startBlinking(OTA_BLINK_SPEED);
-
-  delay(3000);
-  
+  delay(5000);
   while (millis() - otaTimer < OTA_TIMEOUT) {
-    if (readButtons() > 0) {
+    if (digitalRead(button1_pin) == HIGH || digitalRead(button2_pin) == HIGH || digitalRead(button3_pin) == HIGH || digitalRead(button4_pin) == HIGH) {
       stopBlinking();
       goToSleep();
       return;

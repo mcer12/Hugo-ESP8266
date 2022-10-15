@@ -173,16 +173,8 @@ void setup() {
 
   rst_info *rinfo;
   rinfo = ESP.getResetInfoPtr();
-
-  String ota_name = OTA_NAME + macLastThreeSegments(mac);
-  ArduinoOTA.setHostname(ota_name.c_str());
-  ArduinoOTA.begin();
-
-  ArduinoOTA.onStart([]() {
-    Serial.println("OTA UPLOAD STARTED...");
-    stopBlinking();
-    digitalWrite(5, HIGH);
-  });
+  
+  setupOTA();
 
 }
 

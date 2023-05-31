@@ -4,6 +4,9 @@ Hugo is a 4-button ESP8266 Wi-Fi Remote, Arduino compatible and simple to use.
 
 ![alt text](https://raw.githubusercontent.com/mcer12/Hugo-ESP8266/master/Images/hugo_numbered.png)
 
+## Archived
+This project is archived now, don't expect any updates. Hardware and firmware are to be considered final. If you want to make this, you can use pre-compiled binaries in the Releases section.
+
 ## UPDATES
 
 **RELEASE 1.4.1 bugfix (16/11/2019)**
